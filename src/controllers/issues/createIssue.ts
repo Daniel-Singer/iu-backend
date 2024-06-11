@@ -18,14 +18,16 @@ export const createIssue = async (
     const { auth, ...issue } = req.body;
     const [issueId] = await db('issue').insert(issue);
     if (issueId) {
-      const issues: IIssue[] = await db.select('*').where('id', issueId);
+      const issues: IIssueBase[] = await db
+        .select('*')
+        .from('issue')
+        .where('id', issueId);
       res.status(201).json(issues);
     } else {
       res.status(400);
       throw new Error();
     }
-  } catch (error: any) {
-    error.message = 'Fehlermeldung konnte nicht hinzugefügt werden';
+  } catch (error) {
     next(error);
   }
 };
