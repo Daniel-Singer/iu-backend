@@ -16,10 +16,10 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    const { password } = req.body;
+    const { password, auth, ...rest } = req.body;
     const hashedPassword = await hashPassword(password as string);
     const [userId] = await db('users').insert({
-      ...req.body,
+      ...rest,
       password: hashedPassword,
     });
     const user = await db

@@ -15,6 +15,7 @@ import statusRoutes from './routes/status.routes';
 import userRoutes from './routes/user.routes';
 import { errorHandler } from './middleware/error/errorHandler';
 import { protect } from './middleware/auth/protect';
+import { isAdmin } from './middleware/auth/isAdmin';
 
 dotenv.config();
 
@@ -41,6 +42,10 @@ app.use('/api/v1/issues', issueRoutes);
 app.use('/api/v1/media', mediaRoutes);
 app.use('/api/v1/messages', messageRoutes);
 app.use('/api/v1/status', statusRoutes);
+
+// admin routes
+app.use(protect, isAdmin);
+
 app.use('/api/v1/users', userRoutes);
 
 // handling errors

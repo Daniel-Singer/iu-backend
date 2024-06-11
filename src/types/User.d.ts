@@ -5,5 +5,6 @@ interface IUserBase {
   username: string;
   email: string;
   password: string;
+  matrikel_nr?: number;
   role: 'student' | 'tutor' | 'admin';
 }
