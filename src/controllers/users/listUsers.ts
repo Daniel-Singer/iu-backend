@@ -16,7 +16,7 @@ export const listUsers = async (
 ) => {
   try {
     const users: IUserBase = await db
-      .select('first_name', 'last_name')
+      .select('id', 'first_name', 'last_name', 'role')
       .from('users');
     res.status(200).json(users);
   } catch (error) {
