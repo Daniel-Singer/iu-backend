@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { db } from '../../config/db';
+import { hashPassword } from '../../utils/hashPassword';
 
 /**
  * createUser
@@ -15,10 +16,18 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    const users: IUserBase = await db
-      .select('first_name', 'last_name')
-      .from('users');
-    res.status(200).json(users);
+    const { password } = req.body;
+    const hashedPassword = await hashPassword(password as string);
+    const [userId] = await db('users').insert({
+      ...req.body,
+      password: hashedPassword,
+    });
+    const user = await db
+      .select('id', 'first_name', 'last_name', 'password')
+      .from('users')
+      .where({ id: userId })
+      .first();
+    res.status(201).json(user);
   } catch (error) {
     next(error);
   }

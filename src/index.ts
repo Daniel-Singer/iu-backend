@@ -11,6 +11,7 @@ import mediaRoutes from './routes/media.routes';
 import messageRoutes from './routes/message.routes';
 import statusRoutes from './routes/status.routes';
 import userRoutes from './routes/user.routes';
+import { errorHandler } from './middleware/error/errorHandler';
 
 // app setup
 const app: Express = express();
@@ -29,6 +30,9 @@ app.use('/api/v1/media', mediaRoutes);
 app.use('/api/v1/messages', messageRoutes);
 app.use('/api/v1/status', statusRoutes);
 app.use('/api/v1/users', userRoutes);
+
+// handling errors
+app.use(errorHandler);
 
 // starting server
 app.listen(PORT, () =>
