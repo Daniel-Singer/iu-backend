@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import colors from 'colors';
+import cors from 'cors';
 
 // routing imports
 import authRoutes from './routes/auth.routes';
@@ -23,6 +24,8 @@ dotenv.config();
 const app: Express = express();
 
 const PORT = process.env.PORT || 8000;
+
+app.use(cors());
 
 // parsing request body
 app.use(express.json());

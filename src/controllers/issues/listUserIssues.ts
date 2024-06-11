@@ -36,7 +36,8 @@ export const listUserIssues = async (
         'course.code as course_code',
         'course.title as course_title'
       )
-      .where('issue.created_from', req.params.id);
+      .where('issue.created_from', req.params.id)
+      .orWhere('issue.assigned_to', req.params.id);
 
     const formatted: IIssueReceive[] = issues.map((issue: any) => ({
       id: issue.id,

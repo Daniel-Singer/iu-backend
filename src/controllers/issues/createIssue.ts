@@ -16,7 +16,10 @@ export const createIssue = async (
 ) => {
   try {
     const { auth, ...issue } = req.body;
-    const [issueId] = await db('issue').insert(issue);
+    const [issueId] = await db('issue').insert({
+      ...issue,
+      created_from: auth.id,
+    });
     if (issueId) {
       const issues: IIssueBase[] = await db
         .select('*')
