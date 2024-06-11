@@ -1,10 +1,12 @@
 interface IUserBase {
-  id: string;
+  id?: number;
   first_name: string;
   last_name: string;
   username: string;
-  email: string;
   password: string;
-  matrikel_nr?: number;
-  role: 'student' | 'tutor' | 'admin';
+  email: string;
+}
+
+interface IUserStudent extends IUserBase {
+  matrikel_nr: number | null;
 }

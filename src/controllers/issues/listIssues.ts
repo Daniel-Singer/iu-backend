@@ -24,6 +24,7 @@ export const listIssues = async (
     const issueQueries: IIssueQuery = {
       admin: db('issue')
         .join('users as creator', 'issue.created_from', 'creator.id')
+        .join('course', 'issue.course_id', 'course.id')
         .leftJoin('users as assignee', 'issue.assigned_to', 'assignee.id')
         .select(
           'issue.*',
@@ -33,11 +34,26 @@ export const listIssues = async (
           'creator.matrikel_nr as creator_matrikel_nr',
           'assignee.first_name as assignee_first',
           'assignee.last_name as assignee_last',
-          'assignee.email as assignee_email'
+          'assignee.email as assignee_email',
+          'course.id as course_id',
+          'course.code as course_code',
+          'course.title as course_title'
         ),
-      student: db('issue').where('created_from', auth.id),
+      student: db('issue')
+        .join('course', 'issue.course_id', 'course.id')
+        .leftJoin('users as assigne', 'issue.assigned_to', 'assignee.id')
+        .select(
+          'issue.*',
+          'assignee.first_name as assignee_first',
+          'assignee.last_name as assignee_last',
+          'assignee.email as assignee_email',
+          'course.id as course_id',
+          'course.code as course_code',
+          'course.title as course_title'
+        )
+        .where('created_from', auth.id),
       tutor: db
-        .select('+')
+        .select('*')
         .from('issue')
         .where('assigned_to', auth.id)
         .orWhere('created_from', auth.id),
@@ -45,10 +61,15 @@ export const listIssues = async (
 
     const issues = await issueQueries[auth.role];
 
-    const formatted = issues.map((issue: any) => ({
+    const formatted: IIssueReceive[] = issues.map((issue: any) => ({
       id: issue.id,
       title: issue.title,
       description: issue.description,
+      course: {
+        id: issue.course_id,
+        code: issue.course_code,
+        title: issue.course_title,
+      },
       created_from:
         auth.role === 'admin' || auth.role === 'tutor'
           ? {
@@ -65,6 +86,8 @@ export const listIssues = async (
         last_name: issue.assignee_last,
         email: issue.assignee_email,
       },
+      created_at: issue.created_at,
+      updated_at: issue.updated_at,
     }));
 
     res.status(200).json(formatted);
