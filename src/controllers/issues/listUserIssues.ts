@@ -2,10 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { db } from '../../config/db';
 
 /**
- * listIssues
+ * listUserIssues
  *
- * @description     Returns all issues currently stored in database
- * @route           GET /api/v1/issues
+ * @description     Returns all issues currently stored in database for specific user
+ * @route           GET /api/v1/issues/user/:id
  * @access          Student, Tutor, Admin
  */
 
@@ -13,7 +13,7 @@ interface IIssueQuery {
   [key: string]: Promise<any>;
 }
 
-export const listIssues = async (
+export const listUserIssues = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -35,7 +35,8 @@ export const listIssues = async (
         'course.id as course_id',
         'course.code as course_code',
         'course.title as course_title'
-      );
+      )
+      .where('issue.created_from', req.params.id);
 
     const formatted: IIssueReceive[] = issues.map((issue: any) => ({
       id: issue.id,
