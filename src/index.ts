@@ -14,6 +14,7 @@ import messageRoutes from './routes/message.routes';
 import statusRoutes from './routes/status.routes';
 import userRoutes from './routes/user.routes';
 import { errorHandler } from './middleware/error/errorHandler';
+import { protect } from './middleware/auth/protect';
 
 dotenv.config();
 
@@ -27,8 +28,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.JWT_SECRET));
 
-// use routes
+// public routes
 app.use('/api/v1/auth', authRoutes);
+
+// private routes
+app.use(protect);
+
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/courses', courseRoutes);
