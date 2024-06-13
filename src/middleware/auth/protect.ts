@@ -32,6 +32,7 @@ export const protect = async (
         .where('id', decoded?.user?.id)
         .first();
 
+      // forwards user auth data in req body for the controller to use
       if (user) {
         req.body.auth = user;
         next();
