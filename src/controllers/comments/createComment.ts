@@ -25,13 +25,14 @@ export const createComment = async (
           .orWhere('assigned_to', req.body.auth.id);
       })
       .first();
-    console.log(issue);
+
     if (!!issue) {
       const [commentId] = await db('comment').insert({
         text: req.body.text,
         created_from: req.body.auth.id,
         issue_id: issue.id,
       });
+
       const comment: any = await db
         .select('*')
         .from('comment')
