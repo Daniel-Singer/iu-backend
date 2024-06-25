@@ -16,7 +16,14 @@ export const getUser = async (
 ) => {
   try {
     const user: IUserStudent = await db
-      .select(['id', 'first_name', 'last_name', 'matrikel_nr', 'email'])
+      .select([
+        'id',
+        'first_name',
+        'last_name',
+        'username',
+        'matrikel_nr',
+        'email',
+      ])
       .from('users')
       .where('id', req.params.id)
       .first();
