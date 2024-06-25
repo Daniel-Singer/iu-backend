@@ -15,7 +15,8 @@ export const createCategory = async (
   next: NextFunction
 ) => {
   try {
-    const [categoryId] = await db('category').insert(req.body);
+    const { auth, ...rest } = req.body;
+    const [categoryId] = await db('category').insert(rest);
     if (categoryId) {
       const category = await db
         .select('id', 'label', 'description')
@@ -28,7 +29,6 @@ export const createCategory = async (
       throw new Error();
     }
   } catch (error: any) {
-    error.message = 'Kategorie konnte nicht hinzugefügt werden';
     next(error);
   }
 };
