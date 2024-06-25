@@ -9,10 +9,6 @@ import { db } from '../../config/db';
  * @access          Student, Tutor, Admin
  */
 
-interface IIssueQuery {
-  [key: string]: Promise<any>;
-}
-
 export const listUserIssues = async (
   req: Request,
   res: Response,
@@ -22,12 +18,16 @@ export const listUserIssues = async (
     const issues = await db('issue')
       .join('users as creator', 'issue.created_from', 'creator.id')
       .join('course', 'issue.course_id', 'course.id')
+      .leftJoin('category', 'issue.category_id', 'category.id')
       .leftJoin('users as assignee', 'issue.assigned_to', 'assignee.id')
       .select(
         'issue.*',
         'creator.first_name as creator_first',
         'creator.last_name as creator_last',
         'creator.email as creator_email',
+        'category.id as category_id',
+        'category.label as category_label',
+        'category.description as category_description',
         'creator.matrikel_nr as creator_matrikel_nr',
         'assignee.first_name as assignee_first',
         'assignee.last_name as assignee_last',
@@ -47,6 +47,11 @@ export const listUserIssues = async (
         id: issue.course_id,
         code: issue.course_code,
         title: issue.course_title,
+      },
+      category: {
+        id: issue.category_id,
+        label: issue.category_label,
+        description: issue.category_description,
       },
       created_from: {
         id: issue.created_from,
