@@ -5,6 +5,7 @@ import colors from 'colors';
 import cors from 'cors';
 
 // routing imports
+import accountRoutes from './routes/account.routes';
 import authRoutes from './routes/auth.routes';
 import categoryRoutes from './routes/category.routes';
 import commentRoutes from './routes/comment.routes';
@@ -38,6 +39,7 @@ app.use('/api/v1/auth', authRoutes);
 // private routes
 app.use(protect);
 
+app.use('/api/v1/accounts', accountRoutes);
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/courses', courseRoutes);

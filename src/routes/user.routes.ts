@@ -7,6 +7,6 @@ import { getUser } from '../controllers/users/getUser';
 const router: Router = exress.Router();
 
 router.route('/').get(isAdmin, listUsers).post(isAdmin, createUser);
-router.route('/:id').get(isAdmin, getUser).delete().put();
+router.route('/:id').get(getUser).delete().put();
 
 export default router;
