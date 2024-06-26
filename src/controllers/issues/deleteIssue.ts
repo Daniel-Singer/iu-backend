@@ -15,11 +15,17 @@ export const deleteIssue = async (
   next: NextFunction
 ) => {
   try {
-    const issue: IIssueBase = await db('issue')
+    // find issue
+    const issue: IIssueReceive = await db('issue')
       .where('id', req.params.id)
       .first();
+
     if (issue) {
-      if (req.body.auth.role !== 'tutor') {
+      // check if requesting user is owner or admin
+      if (
+        req.body.auth.id === issue.created_from ||
+        req.body.auth.role === 'admin'
+      ) {
         await db('issue').where('id', req.params.id).del();
         res.status(200).json(issue);
       } else {
