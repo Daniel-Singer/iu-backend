@@ -15,7 +15,7 @@ export const createIssue = async (
   next: NextFunction
 ) => {
   try {
-    const { auth, ...issue } = req.body;
+    const { auth, media_type, attached_file, ...issue } = req.body;
     const [issueId] = await db('issue').insert({
       ...issue,
       created_from: auth.id,
