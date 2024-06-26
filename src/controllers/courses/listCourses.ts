@@ -15,9 +15,27 @@ export const listCourses = async (
   next: NextFunction
 ) => {
   try {
-    const courses = await db.select('*').from('course');
+    // const courses = await db.select('*').from('course');
 
-    res.status(200).json(courses);
+    const courses = await db('course')
+      .leftJoin('users', 'course.tutor_id', 'users.id')
+      .select(
+        'course.*',
+        'users.first_name as tutor_first_name',
+        'users.last_name as tutor_last_name'
+      );
+
+    const formatted = courses.map((course) => ({
+      id: course.id,
+      code: course.code,
+      title: course.title,
+      tutor: {
+        id: course.tutor_id,
+        first_name: course.tutor_first_name,
+        last_name: course.tutor_last_name,
+      },
+    }));
+    res.status(200).json(formatted);
   } catch (error) {
     next(error);
   }
