@@ -22,7 +22,8 @@ export const listCourses = async (
       .select(
         'course.*',
         'users.first_name as tutor_first_name',
-        'users.last_name as tutor_last_name'
+        'users.last_name as tutor_last_name',
+        'users.email as tutor_email'
       );
 
     const formatted = courses.map((course) => ({
@@ -33,6 +34,7 @@ export const listCourses = async (
         id: course.tutor_id,
         first_name: course.tutor_first_name,
         last_name: course.tutor_last_name,
+        email: course.tutor_email,
       },
     }));
     res.status(200).json(formatted);
