@@ -15,10 +15,18 @@ export const listUsers = async (
   next: NextFunction
 ) => {
   try {
-    const users: IUserBase = await db
-      .select(['id', 'first_name', 'last_name', 'matrikel_nr', 'role'])
-      .from('users');
-    res.status(200).json(users);
+    const { role } = req.query;
+    if (!role || role === '') {
+      const users: IUserBase[] = await db
+        .select(['id', 'first_name', 'last_name', 'matrikel_nr', 'role'])
+        .from('users');
+      res.status(200).json(users);
+    } else {
+      const users: IUserBase[] = await db('users')
+        .select(['id', 'first_name', 'last_name', 'matrikel_nr', 'role'])
+        .where('role', role);
+      res.status(200).json(users);
+    }
   } catch (error) {
     next(error);
   }
