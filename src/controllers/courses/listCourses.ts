@@ -19,12 +19,15 @@ export const listCourses = async (
 
     const courses = await db('course')
       .leftJoin('users', 'course.tutor_id', 'users.id')
+      .leftJoin('issue', 'course.id', 'issue.course_id')
       .select(
         'course.*',
         'users.first_name as tutor_first_name',
         'users.last_name as tutor_last_name',
         'users.email as tutor_email'
-      );
+      )
+      .count('issue.course_id as issue_count')
+      .groupBy('course.id');
 
     const formatted = courses.map((course) => ({
       id: course.id,
@@ -35,6 +38,9 @@ export const listCourses = async (
         first_name: course.tutor_first_name,
         last_name: course.tutor_last_name,
         email: course.tutor_email,
+      },
+      issues: {
+        count: course.issue_count,
       },
     }));
     res.status(200).json(formatted);
