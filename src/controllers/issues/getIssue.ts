@@ -30,6 +30,18 @@ export const getIssue = async (
       .leftJoin('users', 'course.tutor_id', 'users.id')
       .where('issue.id', req.params.id)
       .first();
+
+    const issueStatus = await db('issue_status')
+      .select([
+        'issue_status.id',
+        'status.label',
+        'status.description',
+        'issue_status.created_at',
+        'issue_status.updated_at',
+      ])
+      .join('status', 'issue_status.status_id', 'status.id')
+      .where('issue_id', issue.id);
+
     const formatted = {
       id: issue.id,
       title: issue.title,
@@ -44,6 +56,7 @@ export const getIssue = async (
           last_name: issue.tutor_last_name,
         },
       },
+      status: issueStatus,
       created_at: issue.created_at,
       updated_at: issue.updated_at,
     };

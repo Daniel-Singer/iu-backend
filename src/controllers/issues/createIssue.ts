@@ -34,24 +34,6 @@ export const createIssue = async (
       created_from: auth.id,
     });
 
-    // find newly created issue
-
-    // const { auth, media_type, attached_file, ...issue } = req.body;
-    // const [issueId] = await db('issue').insert({
-    //   ...issue,
-    //   created_from: auth.id,
-    // });
-    // if (issueId) {
-    //   const issues: IIssueBase[] = await db
-    //     .select('*')
-    //     .from('issue')
-    //     .where('id', issueId);
-    //   res.status(201).json(issues);
-    // } else {
-    //   res.status(400);
-    //   throw new Error();
-    // }
-
     await trx.commit();
 
     const issueData: IIssueReceive = await db('issue')
