@@ -40,7 +40,8 @@ export const getIssue = async (
         'issue_status.updated_at',
       ])
       .join('status', 'issue_status.status_id', 'status.id')
-      .where('issue_id', issue.id);
+      .where('issue_id', issue.id)
+      .first();
 
     const formatted = {
       id: issue.id,
