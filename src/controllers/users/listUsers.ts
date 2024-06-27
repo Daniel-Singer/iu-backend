@@ -18,12 +18,26 @@ export const listUsers = async (
     const { role } = req.query;
     if (!role || role === '') {
       const users: IUserBase[] = await db
-        .select(['id', 'first_name', 'last_name', 'matrikel_nr', 'role'])
+        .select([
+          'id',
+          'first_name',
+          'last_name',
+          'matrikel_nr',
+          'role',
+          'email',
+        ])
         .from('users');
       res.status(200).json(users);
     } else {
       const users: IUserBase[] = await db('users')
-        .select(['id', 'first_name', 'last_name', 'matrikel_nr', 'role'])
+        .select([
+          'id',
+          'first_name',
+          'last_name',
+          'matrikel_nr',
+          'role',
+          'email',
+        ])
         .where('role', role);
       res.status(200).json(users);
     }
