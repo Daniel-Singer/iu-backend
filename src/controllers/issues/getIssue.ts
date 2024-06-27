@@ -41,7 +41,7 @@ export const getIssue = async (
       ])
       .join('status', 'issue_status.status_id', 'status.id')
       .where('issue_id', issue.id)
-      .first();
+      .orderBy('created_at', 'desc');
 
     const formatted = {
       id: issue.id,
