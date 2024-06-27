@@ -15,8 +15,6 @@ export const listCourses = async (
   next: NextFunction
 ) => {
   try {
-    // const courses = await db.select('*').from('course');
-
     const courses = await db('course')
       .leftJoin('users', 'course.tutor_id', 'users.id')
       .leftJoin('issue', 'course.id', 'issue.course_id')
