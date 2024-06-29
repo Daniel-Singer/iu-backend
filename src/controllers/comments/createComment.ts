@@ -15,7 +15,7 @@ export const createComment = async (
   next: NextFunction
 ) => {
   try {
-    const { issue_id } = req.params;
+    const { issue_id } = req.body;
     // find issue and check if user is creator or assignee
     const issue: any = await db('issue')
       .where('id', issue_id)

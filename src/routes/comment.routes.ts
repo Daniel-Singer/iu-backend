@@ -5,7 +5,8 @@ import { deleteComment } from '../controllers/comments/deleteComment';
 
 const router: Router = exress.Router();
 
-router.route('/:issue_id').get(listComments).post(createComment);
+router.route('/').post(createComment);
+router.route('/:issue_id').get(listComments);
 router.route('/:comment_id').get().delete(deleteComment).put();
 
 export default router;
