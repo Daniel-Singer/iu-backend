@@ -29,7 +29,8 @@ export const listComments = async (
         'comment.created_at',
         'comment.updated_at'
       )
-      .where('issue_id', issue_id);
+      .where('issue_id', issue_id)
+      .orderBy('created_at', 'desc');
 
     if (!comments) {
       res.status(404);
