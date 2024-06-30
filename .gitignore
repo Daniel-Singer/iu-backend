@@ -5,3 +5,4 @@ package-lock.json
 knexfile.js
 migrations
 seeds
+dev.sqlite
