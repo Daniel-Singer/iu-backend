@@ -17,10 +17,10 @@ const development = knex({
 const production = knex({
   client: 'mysql2',
   connection: {
-    host: '127.0.0.1',
+    host: process.env.DB_HOST_DEV,
     port: 3306,
-    user: 'daniel',
-    password: '',
+    user: process.env.DB_USER_DEV,
+    password: process.env.DB_PASSWORD_DEV,
     database: 'iu_dev',
   },
 });
