@@ -5,6 +5,7 @@ interface IUserBase {
   username: string;
   password: string;
   email: string;
+  role?: string;
 }
 
 interface IUserStudent extends IUserBase {
