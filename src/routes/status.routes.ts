@@ -6,6 +6,6 @@ import { createStatus } from '../controllers/status/createStatus';
 const router: Router = exress.Router();
 
 router.route('/').get(listStatus).post(isAdmin, createStatus);
-router.route('/:_id').get().delete().put();
+router.route('/:id').get().delete().put();
 
 export default router;
