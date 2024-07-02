@@ -2,5 +2,10 @@ interface ICourseBase {
   id?: number;
   code: string;
   title: string;
-  tutor_id?: number;
 }
+
+interface ICourseCreate extends ICourseBase {
+  tutor_id: number;
+}
+
+interface ICourseReceive extends ICourseBase {}
