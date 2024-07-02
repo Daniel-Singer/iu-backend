@@ -28,23 +28,28 @@ export const getCourse = async (
       .where('course.id', req.params.id)
       .first();
 
-    // find all issues for this course
+    if (course) {
+      // find all issues for this course
 
-    const issues = await db('issue').where('course_id', course.id);
+      const issues = await db('issue').where('course_id', course.id);
 
-    const { id, code, title } = course;
-    const resBody = {
-      id,
-      code,
-      title,
-      tutor: {
-        id: course.tutor_id,
-        first_name: course.tutor_first_name,
-        last_name: course.tutor_last_name,
-      },
-      issues,
-    };
-    res.status(200).json(resBody);
+      const { id, code, title } = course;
+      const resBody = {
+        id,
+        code,
+        title,
+        tutor: {
+          id: course.tutor_id,
+          first_name: course.tutor_first_name,
+          last_name: course.tutor_last_name,
+        },
+        issues,
+      };
+      res.status(200).json(resBody);
+    } else {
+      res.status(404);
+      throw new Error('Der von dir gesuchte Kurs existiert nicht');
+    }
   } catch (error) {
     next(error);
   }

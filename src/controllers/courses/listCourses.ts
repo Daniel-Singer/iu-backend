@@ -27,7 +27,7 @@ export const listCourses = async (
       .count('issue.course_id as issue_count')
       .groupBy('course.id');
 
-    const formatted = courses.map((course) => ({
+    const formatted = courses?.map((course) => ({
       id: course.id,
       code: course.code,
       title: course.title,
