@@ -45,7 +45,6 @@ export const createIssue = async (
       .select([
         'issue_status.id',
         'issue_status.created_from',
-        'issue_status.updated_from',
         'issue_status.created_at',
         'status.id as status_id',
         'status.label as status_label',

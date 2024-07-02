@@ -3,7 +3,6 @@ interface IIssueStatusBase {
   issue_id: number;
   status_id: number;
   created_from: number;
-  updated_from: number | null;
 }
 
 interface IIssueStatusReceive {
