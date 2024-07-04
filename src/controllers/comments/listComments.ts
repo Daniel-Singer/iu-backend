@@ -28,7 +28,8 @@ export const listComments = async (
         'users.last_name as user_last_name',
         'comment.created_at',
         'comment.updated_at',
-        'comment.seen_at'
+        'comment.seen_by_student',
+        'comment.seen_by_tutor'
       )
       .where('issue_id', issue_id)
       .orderBy('created_at', 'desc');
@@ -48,7 +49,8 @@ export const listComments = async (
         },
         created_at: comment.created_at,
         updated_at: comment.updated_at,
-        seen_at: comment.seen_at,
+        seen_by_student: comment.seen_by_student,
+        seen_by_tutor: comment.seen_by_tutor,
       }));
       res.status(200).json(formatted);
     }
