@@ -14,6 +14,7 @@ export const createComment = async (
   res: Response,
   next: NextFunction
 ) => {
+  const trx = await db.transaction();
   try {
     const { issue_id } = req.body;
     // find issue and check if user is creator or assignee
@@ -27,12 +28,22 @@ export const createComment = async (
       .first();
 
     if (!!issue) {
-      const [commentId] = await db('comment').insert({
+      // created comment
+      const [commentId] = await trx('comment').insert({
         text: req.body.text,
         created_from: req.body.auth.id,
         issue_id: issue.id,
       });
+      // create seen_by_user entry
+      await trx('comment_seen_by_user').insert({
+        comment_id: commentId,
+        user_id: null,
+      });
 
+      // commit transaction if both operations are successfull
+      await trx.commit();
+
+      // select newly created comment
       const comment: any = await db
         .select('*')
         .from('comment')
@@ -43,6 +54,7 @@ export const createComment = async (
       throw new Error('Kommentar konnte nicht angelegt werden');
     }
   } catch (error: any) {
+    await trx.rollback();
     next(error);
   }
 };
