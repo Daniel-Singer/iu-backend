@@ -21,6 +21,4 @@ interface ICommentReceive extends ICommentBase {
     last_name: string;
   };
   issue_id: number;
-  seen_by_student: Date | null;
-  seen_by_tutor: Date | null;
 }
