@@ -4,7 +4,7 @@ import { db } from '../../config/db';
 /**
  * createComment
  *
- * @description     Creates new comment row in categories table
+ * @description     Creates new comment row in categories table.
  * @route           POST /api/v1/comments
  * @access          Admin
  */
@@ -16,7 +16,7 @@ export const createComment = async (
 ) => {
   const trx = await db.transaction();
   try {
-    const { issue_id } = req.body;
+    const { issue_id, auth } = req.body;
     // find issue and check if user is creator or assignee
     const issue: any = await db('issue')
       .where('id', issue_id)
@@ -37,7 +37,7 @@ export const createComment = async (
       // create seen_by_user entry
       await trx('comment_seen_by_user').insert({
         comment_id: commentId,
-        user_id: null,
+        user_id: auth.id,
       });
 
       // commit transaction if both operations are successfull
