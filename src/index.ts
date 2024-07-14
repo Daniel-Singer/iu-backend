@@ -6,6 +6,7 @@ import cors from 'cors';
 
 // routing imports
 import accountRoutes from './routes/account.routes';
+import analyticsRoutes from './routes/analytics.routes';
 import authRoutes from './routes/auth.routes';
 import categoryRoutes from './routes/category.routes';
 import commentRoutes from './routes/comment.routes';
@@ -40,6 +41,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use(protect);
 
 app.use('/api/v1/accounts', accountRoutes);
+app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/comments', commentRoutes);
 app.use('/api/v1/courses', courseRoutes);
