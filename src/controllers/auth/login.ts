@@ -22,7 +22,7 @@ export const login = async (
       res.status(400);
       throw new Error('Benutzername und Passwort erforderlich');
     }
-    const user: IUserBase | null = await db
+    const user: IUserReceive | null = await db
       .select()
       .from('users')
       .where('username', username)
@@ -58,6 +58,11 @@ export const login = async (
           { expiresIn: '1d' }
         );
 
+        // store refresh token in user row
+        await db('users').where({ id: user.id }).update({
+          refresh_token: refreshToken,
+        });
+
         // set cookie for refresh token
         res.cookie('refresh_token', refreshToken, {
           httpOnly: true,
@@ -65,7 +70,7 @@ export const login = async (
           maxAge: 24 * 60 * 60 * 1000,
         });
 
-        const { password, ...rest } = user;
+        const { password, refresh_token, ...rest } = user;
         res.status(200).json({ ...rest, accessToken });
       } else {
         res.status(401);
