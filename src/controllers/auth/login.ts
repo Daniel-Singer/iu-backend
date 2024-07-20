@@ -42,7 +42,7 @@ export const login = async (
             },
           },
           process.env.JWT_SECRET as string,
-          { expiresIn: '1d' }
+          { expiresIn: '30s' }
         );
 
         // generate refresh token
