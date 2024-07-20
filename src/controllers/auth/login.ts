@@ -66,7 +66,7 @@ export const login = async (
         // set cookie for refresh token
         res.cookie('refresh_token', refreshToken, {
           httpOnly: true,
-          signed: true,
+          secure: true,
           maxAge: 24 * 60 * 60 * 1000,
         });
 

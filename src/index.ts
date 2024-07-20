@@ -14,6 +14,7 @@ import courseRoutes from './routes/course.routes';
 import issueRoutes from './routes/issue.routes';
 import mediaRoutes from './routes/media.routes';
 import messageRoutes from './routes/message.routes';
+import refreshRoutes from './routes/refresh.routes';
 import statusRoutes from './routes/status.routes';
 import userRoutes from './routes/user.routes';
 import { errorHandler } from './middleware/error/errorHandler';
@@ -32,10 +33,11 @@ app.use(cors());
 // parsing request body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(process.env.JWT_SECRET));
+app.use(cookieParser());
 
 // public routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/refresh', refreshRoutes);
 
 // private routes
 app.use(protect);

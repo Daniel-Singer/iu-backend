@@ -16,17 +16,13 @@ export const refresh = async (
   next: NextFunction
 ) => {
   try {
-    const cookies = req.cookies;
-
     // handle no cookies found
-    if (!cookies?.refresh_token) {
+    if (!req.cookies?.refresh_token) {
       res.status(401);
       throw new Error('Refresh fehlgeschlagen');
     } else {
-      const refreshToken = cookies?.refresh_token;
-
       const user: IUserReceive | undefined = await db('users')
-        .where('refresh_token', refreshToken)
+        .where('refresh_token', req.cookies?.refresh_token)
         .first();
 
       // handle no user found
@@ -35,12 +31,14 @@ export const refresh = async (
         throw new Error('Zugriff nicht erlaubt');
       } else {
         const decoded: any = await jwt.verify(
-          refreshToken,
+          req.cookies?.refresh_token,
           process.env.JWT_SECRET as string
         );
 
+        console.log(decoded);
+
         // handle invalid token
-        if (!decoded || decoded.user.user_name !== user.username) {
+        if (!decoded || decoded.user.username !== user.username) {
           res.status(403);
           throw new Error('Kein gültiger Token');
         } else {
