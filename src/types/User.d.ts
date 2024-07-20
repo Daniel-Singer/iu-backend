@@ -8,6 +8,10 @@ interface IUserBase {
   role?: string;
 }
 
+interface IUserReceive extends IUserBase {
+  refresh_token: string | null;
+}
+
 interface IUserStudent extends IUserBase {
   matrikel_nr: number | null;
 }
