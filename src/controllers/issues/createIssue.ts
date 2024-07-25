@@ -16,7 +16,7 @@ export const createIssue = async (
 ) => {
   const trx = await db.transaction();
   try {
-    const { auth, media_type, attached_file, ...issue } = req.body;
+    const { auth, issue_media, attached_file, ...issue } = req.body;
 
     // create issue
     const [issueId] = await trx('issue').insert({
@@ -24,11 +24,17 @@ export const createIssue = async (
       created_from: auth.id,
     });
 
+    // create issue_media
+    const [issue_media_id] = await trx('issue_media').insert({
+      ...issue_media,
+      issue_id: issueId,
+    });
+
     // find first status
     const status = await trx('status').first();
 
     // create issue_status
-    const [issueStatusId] = await trx('issue_status').insert({
+    await trx('issue_status').insert({
       issue_id: issueId,
       status_id: status.id,
       created_from: auth.id,
@@ -36,8 +42,14 @@ export const createIssue = async (
 
     await trx.commit();
 
+    // get issue data
     const issueData: IIssueReceive = await db('issue')
       .where('id', issueId)
+      .first();
+
+    // get issue_media
+    const issueMedia: IIssueMediaBase = await db('issue_media')
+      .where('id', issue_media_id)
       .first();
 
     // find all related status
@@ -68,6 +80,7 @@ export const createIssue = async (
         last_name: status.last_name,
       },
       created_at: status.created_at,
+      issue_media: issueMedia,
       // TODO - find out why created at is not displayed
     }));
 
