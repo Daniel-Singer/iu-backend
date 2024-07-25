@@ -43,6 +43,7 @@ export const protect = async (
     }
   } catch (error: any) {
     if (error.name === 'TokenExpiredError') {
+      res.status(403);
       error.message = 'Keine Zugriffsberechtigung. Token abgelaufen';
     }
     next(error);

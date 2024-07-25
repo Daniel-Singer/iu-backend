@@ -34,9 +34,6 @@ export const refresh = async (
           req.cookies?.refresh_token,
           process.env.JWT_SECRET as string
         );
-
-        console.log(decoded);
-
         // handle invalid token
         if (!decoded || decoded.user.username !== user.username) {
           res.status(403);
