@@ -25,9 +25,11 @@ export const getIssue = async (
         'users.id as tutor_id',
         'users.first_name as tutor_first_name',
         'users.last_name as tutor_last_name',
+        'issue_media.*',
       ])
       .leftJoin('course', 'issue.course_id', 'course.id')
       .leftJoin('users', 'course.tutor_id', 'users.id')
+      .leftJoin('issue_media', 'issue.id', 'issue_media.issue_id')
       .where('issue.id', req.params.id)
       .first();
 
@@ -56,6 +58,14 @@ export const getIssue = async (
           first_name: issue.tutor_first_name,
           last_name: issue.tutor_last_name,
         },
+      },
+      issue_media: {
+        label: issue?.label,
+        media_type: issue?.media_type,
+        page: issue?.page,
+        line: issue?.line,
+        timestamp: issue?.timestamp,
+        url: issue?.url,
       },
       status: issueStatus,
       created_at: issue.created_at,
