@@ -17,6 +17,10 @@ interface IIssueReceive extends IIssueBase {
   created_from: Partial<IUserStudent>;
   assigned_to: Partial<IUserBase>;
   course: ICourseBase;
+  status: {
+    id: number;
+    label: string;
+  };
   created_at: Date;
   updated_at: Date;
 }

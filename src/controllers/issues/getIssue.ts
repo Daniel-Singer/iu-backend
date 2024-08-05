@@ -25,25 +25,22 @@ export const getIssue = async (
         'users.id as tutor_id',
         'users.first_name as tutor_first_name',
         'users.last_name as tutor_last_name',
-        'issue_media.*',
       ])
       .leftJoin('course', 'issue.course_id', 'course.id')
       .leftJoin('users', 'course.tutor_id', 'users.id')
-      .leftJoin('issue_media', 'issue.id', 'issue_media.issue_id')
       .where('issue.id', req.params.id)
       .first();
 
+    const issueMedia = await db('issue_media')
+      .select(['id', 'url', 'label', 'media_type', 'page', 'line', 'timestamp'])
+      .where('issue_id', issue.id);
+
     const issueStatus = await db('issue_status')
-      .select([
-        'issue_status.id',
-        'status.label',
-        'status.description',
-        'issue_status.created_at',
-        'issue_status.updated_at',
-      ])
+      .select(['status.id', 'status.label'])
       .join('status', 'issue_status.status_id', 'status.id')
       .where('issue_id', issue.id)
-      .orderBy('created_at', 'desc');
+      .orderBy('created_at', 'desc')
+      .first();
 
     const formatted = {
       id: issue.id,
@@ -59,14 +56,7 @@ export const getIssue = async (
           last_name: issue.tutor_last_name,
         },
       },
-      issue_media: {
-        label: issue?.label,
-        media_type: issue?.media_type,
-        page: issue?.page,
-        line: issue?.line,
-        timestamp: issue?.timestamp,
-        url: issue?.url,
-      },
+      issue_media: issueMedia,
       status: issueStatus,
       created_at: issue.created_at,
       updated_at: issue.updated_at,

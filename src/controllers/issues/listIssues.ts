@@ -19,6 +19,7 @@ export const listIssues = async (
   next: NextFunction
 ) => {
   try {
+    // find issues
     const issues = await db('issue')
       .join('users as creator', 'issue.created_from', 'creator.id')
       .join('course', 'issue.course_id', 'course.id')
@@ -34,7 +35,23 @@ export const listIssues = async (
         'assignee.email as assignee_email',
         'course.id as course_id',
         'course.code as course_code',
-        'course.title as course_title'
+        'course.title as course_title',
+        db.raw(`(
+          SELECT status.id
+          FROM issue_status
+          JOIN status ON issue_status.status_id = status.id
+          WHERE issue_status.issue_id = issue.id
+          ORDER BY issue_status.created_at DESC
+          LIMIT 1
+          ) as latest_status_id`),
+        db.raw(`(
+                  SELECT status.description
+                  FROM issue_status
+                  JOIN status ON issue_status.status_id = status.id
+                  WHERE issue_status.issue_id = issue.id
+                  ORDER BY status.created_at DESC
+                  LIMIT 1
+          ) as latest_status`)
       );
 
     const formatted: IIssueReceive[] = issues.map((issue: any) => ({
@@ -58,6 +75,10 @@ export const listIssues = async (
         first_name: issue.assignee_first,
         last_name: issue.assignee_last,
         email: issue.assignee_email,
+      },
+      status: {
+        id: issue.latest_status_id,
+        label: issue.latest_status_label,
       },
       created_at: issue.created_at,
       updated_at: issue.updated_at,

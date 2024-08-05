@@ -34,7 +34,23 @@ export const listUserIssues = async (
         'assignee.email as assignee_email',
         'course.id as course_id',
         'course.code as course_code',
-        'course.title as course_title'
+        'course.title as course_title',
+        db.raw(`(
+          SELECT status.label
+          FROM issue_status
+          JOIN status ON issue_status.status_id = status.id
+          WHERE issue_status.issue_id = issue.id
+          ORDER BY issue_status.created_at DESC
+          LIMIT 1
+          ) as latest_status_label`),
+        db.raw(`(
+          SELECT status.id
+          FROM issue_status
+          JOIN status ON issue_status.status_id = status.id
+          WHERE issue_status.issue_id = issue.id
+          ORDER BY issue_status.created_at DESC
+          LIMIT 1
+          ) as latest_status_id`)
       )
       .where('issue.created_from', req.body.auth.id)
       .orWhere('issue.assigned_to', req.body.auth.id);
@@ -65,6 +81,10 @@ export const listUserIssues = async (
         first_name: issue.assignee_first,
         last_name: issue.assignee_last,
         email: issue.assignee_email,
+      },
+      status: {
+        id: issue.latest_status_id,
+        label: issue.latest_status_label,
       },
       created_at: issue.created_at,
       updated_at: issue.updated_at,
