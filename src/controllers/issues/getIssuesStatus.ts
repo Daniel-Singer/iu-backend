@@ -26,7 +26,8 @@ export const getIssuesStatus = async (
       ])
       .join('status', 'issue_status.status_id', 'status.id')
       .leftJoin('users', 'issue_status.created_from', 'users.id')
-      .where('issue_id', req.params.id);
+      .where('issue_id', req.params.id)
+      .orderBy('created_at', 'desc');
 
     const formatted = issueStatus?.map((status) => ({
       id: status.id,
