@@ -15,6 +15,7 @@ export const createCategory = async (
   next: NextFunction
 ) => {
   try {
+    // TODO - Methode implementieren um festzustellen ob es eine Kategorie mit gegebener Bezeichnung bereits gibt
     const { auth, ...rest } = req.body;
     const [categoryId] = await db('category').insert(rest);
     if (categoryId) {
