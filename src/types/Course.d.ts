@@ -4,6 +4,8 @@ interface ICourseBase {
   title: string;
 }
 
+// TODO - 1 - key active mit type number hinzufügen
+
 interface ICourseCreate extends ICourseBase {
   tutor_id: number;
 }

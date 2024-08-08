@@ -31,6 +31,7 @@ export const listCourses = async (
       id: course.id,
       code: course.code,
       title: course.title,
+      active: course.active,
       tutor: {
         id: course.tutor_id,
         first_name: course.tutor_first_name,
