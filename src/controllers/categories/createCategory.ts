@@ -15,19 +15,28 @@ export const createCategory = async (
   next: NextFunction
 ) => {
   try {
-    // TODO - Methode implementieren um festzustellen ob es eine Kategorie mit gegebener Bezeichnung bereits gibt
     const { auth, ...rest } = req.body;
-    const [categoryId] = await db('category').insert(rest);
-    if (categoryId) {
-      const category = await db
-        .select('id', 'label', 'description')
-        .from('category')
-        .where({ id: categoryId })
-        .first();
-      res.status(201).json(category);
+
+    const category: ICategoryBase | undefined = await db('category')
+      .where('label', rest.label)
+      .first();
+
+    if (category) {
+      res.status(409);
+      throw new Error(`Die Kategorie ${rest.label} existiert bereits`);
     } else {
-      res.status(400);
-      throw new Error();
+      const [categoryId] = await db('category').insert(rest);
+      if (categoryId) {
+        const category = await db
+          .select('id', 'label', 'description')
+          .from('category')
+          .where({ id: categoryId })
+          .first();
+        res.status(201).json(category);
+      } else {
+        res.status(400);
+        throw new Error();
+      }
     }
   } catch (error: any) {
     next(error);
