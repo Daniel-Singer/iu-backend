@@ -6,7 +6,7 @@ export const updateDataProvided = async (
   next: NextFunction
 ) => {
   try {
-    const { auth, ...update } = req.body;
+    const { auth, password, ...update } = req.body;
     if (Object.keys(update).length > 0) {
       next();
     } else {
