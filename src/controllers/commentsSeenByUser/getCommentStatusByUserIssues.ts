@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { db } from '../../../config/db';
+import { db } from '../../config/db';
 
 /**
  * getCommentStatusByUserIssues

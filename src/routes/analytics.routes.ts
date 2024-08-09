@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { getCommentStatusByUserIssues } from '../controllers/analytics/comments/getCommentStatusByUserIssues';
+import { getCommentStatusByUserIssues } from '../controllers/commentsSeenByUser/getCommentStatusByUserIssues';
 
 const router: Router = express.Router();
 
