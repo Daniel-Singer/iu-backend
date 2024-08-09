@@ -17,7 +17,7 @@ export const markCommentsAsSeenByUser = async (
   try {
     const { auth } = req.body;
     const { issue_id } = req.params;
-    // find all comments related to
+    // find all comments related to issue
     const comments = await db('comment')
       .select(['id'])
       .where('issue_id', issue_id);

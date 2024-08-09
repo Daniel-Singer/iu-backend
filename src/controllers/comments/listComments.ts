@@ -19,6 +19,13 @@ export const listComments = async (
 
     const comments = await db('comment')
       .join('users', 'created_from', 'users.id')
+      .leftJoin('comment_seen_by_user', function () {
+        this.on('comment.id', '=', 'comment_seen_by_user.comment_id').andOn(
+          'comment_seen_by_user.user_id',
+          '=',
+          req.body.auth.id
+        );
+      })
       .select(
         'comment.id',
         'comment.text',
@@ -27,7 +34,8 @@ export const listComments = async (
         'users.first_name as user_first_name',
         'users.last_name as user_last_name',
         'comment.created_at',
-        'comment.updated_at'
+        'comment.updated_at',
+        'comment_seen_by_user.id as seen_id'
       )
       .where('issue_id', issue_id)
       .orderBy('created_at', 'desc');
@@ -45,6 +53,7 @@ export const listComments = async (
           first_name: comment.user_first_name,
           last_name: comment.user_last_name,
         },
+        seen_by_user: !!comment.seen_id ?? null,
         created_at: comment.created_at,
         updated_at: comment.updated_at,
       }));
