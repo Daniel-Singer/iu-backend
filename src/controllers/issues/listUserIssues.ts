@@ -15,6 +15,7 @@ export const listUserIssues = async (
   next: NextFunction
 ) => {
   try {
+    const { auth } = req.body;
     const issues = await db('issue')
       .join('users as creator', 'issue.created_from', 'creator.id')
       .join('course', 'issue.course_id', 'course.id')

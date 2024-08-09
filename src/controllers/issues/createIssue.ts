@@ -18,10 +18,17 @@ export const createIssue = async (
   try {
     const { auth, issue_media, attached_file, ...issue } = req.body;
 
+    // find course tutor
+    const course = await db('course')
+      .select(['tutor_id'])
+      .where('id', issue.course_id)
+      .first();
+
     // create issue
     const [issueId] = await trx('issue').insert({
       ...issue,
       created_from: auth.id,
+      assigned_to: course.tutor_id,
     });
 
     // create issue_media
@@ -81,7 +88,6 @@ export const createIssue = async (
       },
       created_at: status.created_at,
       issue_media: issueMedia,
-      // TODO - find out why created at is not displayed
     }));
 
     const returnData = {
