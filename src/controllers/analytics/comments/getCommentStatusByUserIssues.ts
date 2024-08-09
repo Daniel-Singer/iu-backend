@@ -16,43 +16,34 @@ export const getCommentStatusByUserIssues = async (
 ) => {
   try {
     const { auth } = req.body;
+    let issues;
 
-    // find all issues related to user if user is creator or assignee
-    const issues: IIssueReceive[] = await db('issue')
-      .where('created_from', auth.id)
-      .orWhere('assigned_to', auth.id);
+    if (auth.role !== 'admin') {
+      issues = await db('issue')
+        .where('created_from', auth.id)
+        .orWhere('assigned_to', auth.id);
+    } else {
+      issues = await db('issue');
+    }
 
-    // get all issue ids
-    const issueIds = issues.map(({ id }) => id!);
+    const issueIds = issues?.map(({ id }) => id);
 
-    // find all related comments for all issues
-    const comments = await db('comment').whereIn('issue_id', issueIds);
-
-    // get all comment ids
-    const commentIds = comments.map(({ id }) => id!);
-
-    // check if the user has seen the comments yet
-    const seenByUser = await db('comment_seen_by_user')
-      .select(['comment_id'])
-      .whereIn('comment_id', commentIds);
-
-    // get commentIds array of seenByUser
-    const seenByUserCommentIds = seenByUser.map(
-      ({ comment_id }) => comment_id!
-    );
-
-    const allCommentIds = [...commentIds, ...seenByUserCommentIds];
-
-    // get ids of comments that user has not seen yet
-
-    const hasNotSeenComments = allCommentIds.filter(
-      (id) => !(commentIds.includes(id) && seenByUserCommentIds.includes(id))
-    );
+    const result = await db('comment as c')
+      .leftJoin('comment_seen_by_user as csbu', function () {
+        this.on('c.id', 'csbu.comment_id').andOn(
+          'csbu.user_id',
+          req.body.auth.id
+        );
+      })
+      .whereNull('csbu.comment_id')
+      .whereIn('c.issue_id', issueIds)
+      .count('c.id as unseen_comments_count')
+      .first();
 
     res.status(200).json({
       comments: {
         new: {
-          count: hasNotSeenComments.length!,
+          count: result?.unseen_comments_count ?? 0,
         },
       },
     });
