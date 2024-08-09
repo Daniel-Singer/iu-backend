@@ -28,9 +28,14 @@ export const markCommentsAsSeenByUser = async (
       user_id: auth.id,
     }));
 
-    const [inserted] = await db('comment_seen_by_user').insert(insertData);
-    res.status(200).json(inserted);
-  } catch (error) {
+    await db('comment_seen_by_user').insert(insertData);
+
+    res.sendStatus(200);
+  } catch (error: any) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      res.status(409);
+      error.message = 'Kommentare bereits als gesehen markiert';
+    }
     next(error);
   }
 };
