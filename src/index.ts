@@ -52,9 +52,6 @@ app.use('/api/v1/media', mediaRoutes);
 app.use('/api/v1/messages', messageRoutes);
 app.use('/api/v1/status', statusRoutes);
 
-// admin routes
-app.use(protect, isAdmin);
-
 app.use('/api/v1/users', userRoutes);
 
 // handling errors

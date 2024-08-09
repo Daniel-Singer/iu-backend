@@ -14,7 +14,7 @@ export const isUserOrAdmin = async (
 ) => {
   try {
     const { auth } = req.body;
-    if (auth.id === req.params.id || auth.role === 'admin') {
+    if (auth.id == req.params.id || auth.role === 'admin') {
       next();
     } else {
       res.status(403);

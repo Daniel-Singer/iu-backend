@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { db } from '../../config/db';
 
 /**
  * updateUser
@@ -14,6 +15,28 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   try {
+    const { auth, ...body } = req.body;
+    const { currentPassword, newPassword, confirmNewPassword, ...update } =
+      body;
+
+    // find user
+    const user: IUserReceive = await db('users')
+      .where({ id: req.params.id })
+      .first();
+
+    if (user) {
+      if (!currentPassword) {
+        // update user if there is no need to update password
+        await db('users').where({ id: req.params.id }).update(update);
+        res.sendStatus(200);
+      } else {
+      }
+    } else {
+      res.status(404);
+      throw new Error(
+        'Update Fehlgeschlagen! Der gesuchte User existiert nicht.'
+      );
+    }
   } catch (error) {
     next(error);
   }
