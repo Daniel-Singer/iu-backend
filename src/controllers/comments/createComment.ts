@@ -18,14 +18,21 @@ export const createComment = async (
   try {
     const { issue_id, auth } = req.body;
     // find issue and check if user is creator or assignee
-    const issue: any = await db('issue')
-      .where('id', issue_id)
-      .andWhere((builder) => {
-        builder
-          .where('created_from', req.body.auth.id)
-          .orWhere('assigned_to', req.body.auth.id);
-      })
-      .first();
+
+    let issue: any;
+
+    if (auth.role !== 'admin') {
+      issue = await db('issue')
+        .where('id', issue_id)
+        .andWhere((builder) => {
+          builder
+            .where('created_from', req.body.auth.id)
+            .orWhere('assigned_to', req.body.auth.id);
+        })
+        .first();
+    } else {
+      issue = await db('issue').where('id', issue_id);
+    }
 
     if (!!issue) {
       // created comment

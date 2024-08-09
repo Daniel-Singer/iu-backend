@@ -16,27 +16,30 @@ export const listUserIssues = async (
 ) => {
   try {
     const { auth } = req.body;
-    const issues = await db('issue')
-      .join('users as creator', 'issue.created_from', 'creator.id')
-      .join('course', 'issue.course_id', 'course.id')
-      .leftJoin('category', 'issue.category_id', 'category.id')
-      .leftJoin('users as assignee', 'issue.assigned_to', 'assignee.id')
-      .select(
-        'issue.*',
-        'creator.first_name as creator_first',
-        'creator.last_name as creator_last',
-        'creator.email as creator_email',
-        'category.id as category_id',
-        'category.label as category_label',
-        'category.description as category_description',
-        'creator.matrikel_nr as creator_matrikel_nr',
-        'assignee.first_name as assignee_first',
-        'assignee.last_name as assignee_last',
-        'assignee.email as assignee_email',
-        'course.id as course_id',
-        'course.code as course_code',
-        'course.title as course_title',
-        db.raw(`(
+    let issues: any;
+
+    if (auth.role !== 'admin') {
+      issues = await db('issue')
+        .join('users as creator', 'issue.created_from', 'creator.id')
+        .join('course', 'issue.course_id', 'course.id')
+        .leftJoin('category', 'issue.category_id', 'category.id')
+        .leftJoin('users as assignee', 'issue.assigned_to', 'assignee.id')
+        .select(
+          'issue.*',
+          'creator.first_name as creator_first',
+          'creator.last_name as creator_last',
+          'creator.email as creator_email',
+          'category.id as category_id',
+          'category.label as category_label',
+          'category.description as category_description',
+          'creator.matrikel_nr as creator_matrikel_nr',
+          'assignee.first_name as assignee_first',
+          'assignee.last_name as assignee_last',
+          'assignee.email as assignee_email',
+          'course.id as course_id',
+          'course.code as course_code',
+          'course.title as course_title',
+          db.raw(`(
           SELECT status.label
           FROM issue_status
           JOIN status ON issue_status.status_id = status.id
@@ -44,7 +47,7 @@ export const listUserIssues = async (
           ORDER BY issue_status.created_at DESC
           LIMIT 1
           ) as latest_status_label`),
-        db.raw(`(
+          db.raw(`(
           SELECT status.id
           FROM issue_status
           JOIN status ON issue_status.status_id = status.id
@@ -52,9 +55,48 @@ export const listUserIssues = async (
           ORDER BY issue_status.created_at DESC
           LIMIT 1
           ) as latest_status_id`)
-      )
-      .where('issue.created_from', req.body.auth.id)
-      .orWhere('issue.assigned_to', req.body.auth.id);
+        )
+        .where('issue.created_from', req.body.auth.id)
+        .orWhere('issue.assigned_to', req.body.auth.id);
+    } else {
+      issues = await db('issue')
+        .join('users as creator', 'issue.created_from', 'creator.id')
+        .join('course', 'issue.course_id', 'course.id')
+        .leftJoin('category', 'issue.category_id', 'category.id')
+        .leftJoin('users as assignee', 'issue.assigned_to', 'assignee.id')
+        .select(
+          'issue.*',
+          'creator.first_name as creator_first',
+          'creator.last_name as creator_last',
+          'creator.email as creator_email',
+          'category.id as category_id',
+          'category.label as category_label',
+          'category.description as category_description',
+          'creator.matrikel_nr as creator_matrikel_nr',
+          'assignee.first_name as assignee_first',
+          'assignee.last_name as assignee_last',
+          'assignee.email as assignee_email',
+          'course.id as course_id',
+          'course.code as course_code',
+          'course.title as course_title',
+          db.raw(`(
+          SELECT status.label
+          FROM issue_status
+          JOIN status ON issue_status.status_id = status.id
+          WHERE issue_status.issue_id = issue.id
+          ORDER BY issue_status.created_at DESC
+          LIMIT 1
+          ) as latest_status_label`),
+          db.raw(`(
+          SELECT status.id
+          FROM issue_status
+          JOIN status ON issue_status.status_id = status.id
+          WHERE issue_status.issue_id = issue.id
+          ORDER BY issue_status.created_at DESC
+          LIMIT 1
+          ) as latest_status_id`)
+        );
+    }
 
     const formatted: IIssueReceive[] = issues.map((issue: any) => ({
       id: issue.id,
