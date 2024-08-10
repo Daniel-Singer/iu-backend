@@ -38,7 +38,7 @@ export const updateIssue = async (
           });
         }
         await trx.commit();
-        res.sendStatus(201);
+        res.status(201).json(issue);
       } else {
         res.status(400);
         throw new Error('Bitte Daten für Update bereitstellen');
@@ -48,7 +48,6 @@ export const updateIssue = async (
       throw new Error('Update fehlgeschlagen! Fehlermeldung existiert nicht');
     }
   } catch (error) {
-    console.log(error);
     await trx.rollback();
     next(error);
   }

@@ -36,7 +36,7 @@ export const getIssue = async (
       .where('issue_id', issue.id);
 
     const issueStatus = await db('issue_status')
-      .select(['status.id', 'status.label'])
+      .select(['status.id', 'status.label', 'issue_status.reason'])
       .join('status', 'issue_status.status_id', 'status.id')
       .where('issue_id', issue.id)
       .orderBy('created_at', 'desc')
@@ -58,6 +58,7 @@ export const getIssue = async (
       },
       issue_media: issueMedia,
       status: issueStatus,
+      reason: issueStatus.reason,
       created_at: issue.created_at,
       updated_at: issue.updated_at,
     };
