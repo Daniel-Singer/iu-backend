@@ -14,10 +14,9 @@ export const updateIssue = async (
   res: Response,
   next: NextFunction
 ) => {
-  // TODO - Methode implementieren damit nur eigentümer oder admins update vornehmen können
   const trx = await db.transaction();
   try {
-    const { auth, status, ...update } = req.body;
+    const { auth, status, reason, ...update } = req.body;
 
     const issue = await db('issue').where({ id: req.params.id }).first();
     if (issue) {
@@ -35,6 +34,7 @@ export const updateIssue = async (
             issue_id: issue.id,
             status_id: status.id,
             created_from: auth.id,
+            reason: reason && reason !== '' ? reason : null,
           });
         }
         await trx.commit();
@@ -48,6 +48,7 @@ export const updateIssue = async (
       throw new Error('Update fehlgeschlagen! Fehlermeldung existiert nicht');
     }
   } catch (error) {
+    console.log(error);
     await trx.rollback();
     next(error);
   }
