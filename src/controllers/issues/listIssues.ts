@@ -36,6 +36,7 @@ export const listIssues = async (
         'course.id as course_id',
         'course.code as course_code',
         'course.title as course_title',
+        'course.active as course_active',
         db.raw(`(
           SELECT status.id
           FROM issue_status
@@ -62,6 +63,7 @@ export const listIssues = async (
         id: issue.course_id,
         code: issue.course_code,
         title: issue.course_title,
+        active: issue.course_active,
       },
       created_from: {
         id: issue.created_from,

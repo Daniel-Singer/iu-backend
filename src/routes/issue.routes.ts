@@ -7,6 +7,7 @@ import { listUserIssues } from '../controllers/issues/listUserIssues';
 import { getIssue } from '../controllers/issues/getIssue';
 import { updateIssue } from '../controllers/issues/updateIssue';
 import { getIssuesStatus } from '../controllers/issues/getIssuesStatus';
+import { listIssuesByCourse } from '../controllers/issues/listIssuesByCourse';
 
 const router: Router = exress.Router();
 
@@ -14,6 +15,7 @@ router.route('/').post(createIssue);
 router.route('/admin').get(isAdmin, listIssues);
 router.route('/user').get(listUserIssues);
 router.route('/status/:id').get(getIssuesStatus);
+router.route('/course/:id').get(listIssuesByCourse);
 router.route('/:id').get(getIssue).delete(deleteIssue).put(updateIssue);
 
 export default router;
