@@ -57,7 +57,8 @@ export const listUserIssues = async (
           ) as latest_status_id`)
         )
         .where('issue.created_from', req.body.auth.id)
-        .orWhere('issue.assigned_to', req.body.auth.id);
+        .orWhere('issue.assigned_to', req.body.auth.id)
+        .orderBy('id', 'desc');
     } else {
       issues = await db('issue')
         .join('users as creator', 'issue.created_from', 'creator.id')
@@ -95,7 +96,8 @@ export const listUserIssues = async (
           ORDER BY issue_status.created_at DESC
           LIMIT 1
           ) as latest_status_id`)
-        );
+        )
+        .orderBy('id', 'desc');
     }
 
     const formatted: IIssueReceive[] = issues.map((issue: any) => ({

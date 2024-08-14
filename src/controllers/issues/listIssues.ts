@@ -53,7 +53,8 @@ export const listIssues = async (
                   ORDER BY status.created_at DESC
                   LIMIT 1
           ) as latest_status`)
-      );
+      )
+      .orderBy('id', 'desc');
 
     const formatted: IIssueReceive[] = issues.map((issue: any) => ({
       id: issue.id,
