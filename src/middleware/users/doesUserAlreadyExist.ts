@@ -25,7 +25,7 @@ export const doesUserAlreadyExist = async (
     } else {
       res.status(409);
       throw new Error(
-        `Ein Benutzer mit dem Namen ${user.first_name} ${user.last_name}`
+        `Ein Benutzer mit dem Namen ${user.first_name} ${user.last_name} existiert bereits`
       );
     }
   } catch (error) {
