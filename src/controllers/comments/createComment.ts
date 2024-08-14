@@ -17,9 +17,8 @@ export const createComment = async (
   const trx = await db.transaction();
   try {
     const { issue_id, auth } = req.body;
-    // find issue and check if user is creator or assignee
 
-    let issue: any;
+    let issue: IIssueReceive;
 
     if (auth.role !== 'admin') {
       issue = await db('issue')
@@ -31,7 +30,7 @@ export const createComment = async (
         })
         .first();
     } else {
-      issue = await db('issue').where('id', issue_id);
+      issue = await db('issue').where('id', issue_id).first();
     }
 
     if (!!issue) {
@@ -39,7 +38,7 @@ export const createComment = async (
       const [commentId] = await trx('comment').insert({
         text: req.body.text,
         created_from: req.body.auth.id,
-        issue_id: issue.id,
+        issue_id: issue?.id!,
       });
       // create seen_by_user entry
       await trx('comment_seen_by_user').insert({
