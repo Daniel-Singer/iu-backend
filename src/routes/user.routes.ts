@@ -6,10 +6,14 @@ import { getUser } from '../controllers/users/getUser';
 import { updateUser } from '../controllers/users/updateUser';
 import { isUserOrAdmin } from '../middleware/validation/account/isUserOrAdmin';
 import { updateDataProvided } from '../middleware/validation/account/updateDataProvided';
+import { doesUserAlreadyExist } from '../middleware/users/doesUserAlreadyExist';
 
 const router: Router = exress.Router();
 
-router.route('/').get(isAdmin, listUsers).post(isAdmin, createUser);
+router
+  .route('/')
+  .get(isAdmin, listUsers)
+  .post(isAdmin, doesUserAlreadyExist, createUser);
 router
   .route('/:id')
   .get(getUser)

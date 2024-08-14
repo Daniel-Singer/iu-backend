@@ -14,6 +14,7 @@ export const doesUserAlreadyExist = async (
 ) => {
   try {
     const { first_name, last_name } = req.body;
+
     const user = await db('users')
       .whereRaw('LOWER(first_name) = ?', first_name.toLowerCase())
       .andWhereRaw('LOWER(last_name) = ?', last_name.toLowerCase())
