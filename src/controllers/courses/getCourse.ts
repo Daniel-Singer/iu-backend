@@ -44,6 +44,7 @@ export const getCourse = async (
           last_name: course.tutor_last_name,
         },
         issues,
+        active: course.active,
       };
       res.status(200).json(resBody);
     } else {
