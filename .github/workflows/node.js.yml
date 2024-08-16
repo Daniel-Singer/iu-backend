@@ -11,9 +11,6 @@ jobs:
   build:
 
     runs-on: self-hosted
-    defaults:
-      run: 
-        working-directory: ./iu-backend
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
@@ -26,6 +23,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: ./iu-backend/package-lock.json
     - run: npm install
     - run: npm run build --if-present
