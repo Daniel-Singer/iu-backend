@@ -26,7 +26,7 @@ dotenv.config();
 // app setup
 const app: Express = express();
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 
 app.use(cors());
 
