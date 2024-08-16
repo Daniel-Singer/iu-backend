@@ -31,3 +31,4 @@ jobs:
           echo "DB_PASSWORD_DEV=${{secrets.DB_PASSWORD_DEV}}" >> .env
       - run: npm install
       - run: npm run build
+      - run: pm2 restart iu
