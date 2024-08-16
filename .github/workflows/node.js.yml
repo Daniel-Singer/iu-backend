@@ -22,9 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Setup .env file
       - run: touch .env
-      - name: Write to .env file
       - run: echo "NODE_ENV=${{secrets.NODE_ENV}}" > .env
       - run: npm install
       - run: npm run build
