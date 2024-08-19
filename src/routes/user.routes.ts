@@ -7,6 +7,7 @@ import { updateUser } from '../controllers/users/updateUser';
 import { isUserOrAdmin } from '../middleware/validation/account/isUserOrAdmin';
 import { updateDataProvided } from '../middleware/validation/account/updateDataProvided';
 import { doesUserAlreadyExist } from '../middleware/users/doesUserAlreadyExist';
+import { canAccessUserData } from '../middleware/users/canAccessUserData';
 
 const router: Router = exress.Router();
 
@@ -16,7 +17,7 @@ router
   .post(isAdmin, doesUserAlreadyExist, createUser);
 router
   .route('/:id')
-  .get(isUserOrAdmin, getUser)
+  .get(canAccessUserData, getUser)
   .delete()
   .put(isUserOrAdmin, updateDataProvided, updateUser);
 
