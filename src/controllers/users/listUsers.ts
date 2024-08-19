@@ -27,7 +27,9 @@ export const listUsers = async (
           'users.email',
         ])
         .leftJoin('issue', 'issue.created_from', 'users.id')
+        .leftJoin('issue as tutor_issue', 'tutor_issue.assigned_to', 'users.id')
         .count('issue.id as issues_count')
+        .count('tutor_issue.id as assigned_count')
         .groupBy(
           'users.id',
           'users.first_name',
@@ -49,7 +51,9 @@ export const listUsers = async (
         ])
         .where('role', role)
         .leftJoin('issue', 'issue.created_from', 'users.id')
+        .leftJoin('issue as tutor_issue', 'tutor_issue.assigned_to', 'users.id')
         .count('issue.id as issues_count')
+        .count('tutor_issue.id as assigned_count')
         .groupBy(
           'users.id',
           'users.first_name',
