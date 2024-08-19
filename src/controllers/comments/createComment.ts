@@ -46,6 +46,19 @@ export const createComment = async (
         user_id: auth.id,
       });
 
+      await trx('notification').insert({
+        recipient_id:
+          auth.id === issue?.created_from
+            ? issue.assigned_to
+            : issue.created_from,
+        issue_id: issue?.id,
+        subject: `Neuer Kommentar zu Meldung #${issue?.id}`,
+        head: `Liebe/r Studierende/r`,
+        body: ` Ihrer Meldung mit der ID 
+                ${issue?.id} zum Thema ${issue?.title} wurde ein neuer Kommentar hinzugefügt.`,
+        footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+      });
+
       // commit transaction if both operations are successfull
       await trx.commit();
 
