@@ -16,9 +16,11 @@ export const listNotifications = async (
 ) => {
   try {
     const { auth } = req.body;
-    const notifications = await db('notification').where({
-      recipient_id: auth.id,
-    });
+    const notifications = await db('notification')
+      .where({
+        recipient_id: auth.id,
+      })
+      .orderBy('created_at', 'desc');
     res.status(200).json(notifications);
   } catch (error) {
     next(error);
