@@ -53,7 +53,7 @@ export const createIssue = async (
       issue_id: issueId,
       subject: 'Neue Meldung aufgenommen',
       head: 'Liebe/r Studierende/r',
-      body: ` Ihre Meldung zum Thema ${issue.title} wurde erfolgreich aufgenommen.`,
+      body: ` Ihre Meldung zum Thema <strong>"${issue.title}"</strong> wurde erfolgreich aufgenommen.`,
       footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
     });
 
