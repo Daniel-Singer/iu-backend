@@ -16,7 +16,7 @@ router
   .post(isAdmin, doesUserAlreadyExist, createUser);
 router
   .route('/:id')
-  .get(getUser)
+  .get(isUserOrAdmin, getUser)
   .delete()
   .put(isUserOrAdmin, updateDataProvided, updateUser);
 
