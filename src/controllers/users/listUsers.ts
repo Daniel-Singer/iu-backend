@@ -17,28 +17,51 @@ export const listUsers = async (
   try {
     const { role } = req.query;
     if (!role || role === '') {
-      const users: IUserBase[] = await db
+      const users: IUserBase[] = await db('users')
         .select([
-          'id',
-          'first_name',
-          'last_name',
-          'matrikel_nr',
-          'role',
-          'email',
+          'users.id',
+          'users.first_name',
+          'users.last_name',
+          'users.matrikel_nr',
+          'users.role',
+          'users.email',
         ])
-        .from('users');
+        .leftJoin('issue', 'issue.created_from', 'users.id')
+        .leftJoin('issue as tutor_issue', 'tutor_issue.assigned_to', 'users.id')
+        .count('issue.id as issues_count')
+        .count('tutor_issue.id as assigned_count')
+        .groupBy(
+          'users.id',
+          'users.first_name',
+          'users.last_name',
+          'users.matrikel_nr',
+          'users.role',
+          'users.email'
+        );
       res.status(200).json(users);
     } else {
       const users: IUserBase[] = await db('users')
         .select([
-          'id',
-          'first_name',
-          'last_name',
-          'matrikel_nr',
-          'role',
-          'email',
+          'users.id',
+          'users.first_name',
+          'users.last_name',
+          'users.matrikel_nr',
+          'users.role',
+          'users.email',
         ])
-        .where('role', role);
+        .where('role', role)
+        .leftJoin('issue', 'issue.created_from', 'users.id')
+        .leftJoin('issue as tutor_issue', 'tutor_issue.assigned_to', 'users.id')
+        .count('issue.id as issues_count')
+        .count('tutor_issue.id as assigned_count')
+        .groupBy(
+          'users.id',
+          'users.first_name',
+          'users.last_name',
+          'users.matrikel_nr',
+          'users.role',
+          'users.email'
+        );
       res.status(200).json(users);
     }
   } catch (error) {
