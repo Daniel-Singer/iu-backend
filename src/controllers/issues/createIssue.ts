@@ -47,6 +47,26 @@ export const createIssue = async (
       created_from: auth.id,
     });
 
+    // create notification for student
+    await trx('notification').insert({
+      recipient_id: auth.id,
+      issue_id: issueId,
+      subject: 'Neue Meldung aufgenommen',
+      head: 'Liebe/r Studierende/r',
+      body: ` Ihre Meldung zum Thema ${issue.title} wurde erfolgreich aufgenommen.`,
+      footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+    });
+
+    // create notification for tutor
+    await trx('notification').insert({
+      recipient_id: course?.tutor_id,
+      issue_id: issueId,
+      subject: 'Neue Meldung zugewiesen',
+      head: 'Liebe/r Tutor/in',
+      body: ` Ihnen wurden eine neue Meldung zugewiesen`,
+      footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+    });
+
     await trx.commit();
 
     // get issue data

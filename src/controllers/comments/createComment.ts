@@ -55,7 +55,8 @@ export const createComment = async (
         subject: `Neuer Kommentar zu Meldung #${issue?.id}`,
         head: `Liebe/r Studierende/r`,
         body: ` Ihrer Meldung mit der ID 
-                ${issue?.id} zum Thema ${issue?.title} wurde ein neuer Kommentar hinzugefügt.`,
+                ${issue?.id} zum Thema ${issue?.title}
+                wurde ein neuer Kommentar hinzugefügt.`,
         footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
       });
 
