@@ -5,11 +5,13 @@ interface INotificationBase {
 
 interface INotificationCreate extends INotificationBase {
   recipient_id: number;
-  body: string;
   issue_id: number;
+  head: string;
+  body: string;
+  footer: string;
 }
 
 interface INotificationReceive extends INotificationBase {
-  recipient: Pick<IUserBase, 'id' | 'first_name' | 'last_name'>;
   issue: Pick<IIssueBase, 'id', 'title', 'description'>;
+  seen: number;
 }
