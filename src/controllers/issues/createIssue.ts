@@ -14,7 +14,7 @@ export const createIssue = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.file);
+  console.log(req.body);
   const trx = await db.transaction();
   try {
     const { auth, issue_media, attached_file, ...issue } = req.body;
