@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
+import fs from 'fs/promises';
+import path from 'path';
 
 /**
  * downloadMedia
@@ -14,7 +16,16 @@ export const downloadMedia = async (
   next: NextFunction
 ) => {
   try {
-    res.status(200).json(req.body);
+    const { file_path, mimetype } = req.body.media;
+
+    const filepath = path.resolve(file_path);
+
+    // read file
+    const data = await fs.readFile(filepath);
+
+    res.setHeader('Content-Type', mimetype);
+    res.setHeader('Content-Disposition', 'inline');
+    res.send(data);
   } catch (error) {
     next(error);
   }

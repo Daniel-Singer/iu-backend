@@ -15,13 +15,11 @@ export const isUserRelatedOrAdmin = async (
   try {
     const { auth } = req.body;
 
+    const media = await db('issue_media').where({ id: req.params.id }).first();
+    req.body.media = media;
     if (auth.role === 'admin') {
       next();
     } else {
-      const media = await db('issue_media')
-        .select('issue_id')
-        .where({ id: req.params.id })
-        .first();
       const issue = await db('issue')
         .where({ id: media.issue_id })
         .andWhere(function () {
