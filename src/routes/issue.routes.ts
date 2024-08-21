@@ -8,10 +8,11 @@ import { getIssue } from '../controllers/issues/getIssue';
 import { updateIssue } from '../controllers/issues/updateIssue';
 import { getIssuesStatus } from '../controllers/issues/getIssuesStatus';
 import { listIssuesByCourse } from '../controllers/issues/listIssuesByCourse';
+import upload from '../config/upload';
 
 const router: Router = exress.Router();
 
-router.route('/').post(createIssue);
+router.route('/').post(upload.single('attached_file'), createIssue);
 router.route('/admin').get(isAdmin, listIssues);
 router.route('/user').get(listUserIssues);
 router.route('/status/:id').get(getIssuesStatus);
