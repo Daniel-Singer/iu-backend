@@ -8,13 +8,17 @@ import { getIssue } from '../controllers/issues/getIssue';
 import { updateIssue } from '../controllers/issues/updateIssue';
 import { getIssuesStatus } from '../controllers/issues/getIssuesStatus';
 import { listIssuesByCourse } from '../controllers/issues/listIssuesByCourse';
+import upload from '../config/upload';
+import { protect } from '../middleware/auth/protect';
+import { getIssueMedia } from '../controllers/issues/getIssueMedia';
 
 const router: Router = exress.Router();
 
-router.route('/').post(createIssue);
+router.route('/').post(upload.single('attached_file'), protect, createIssue);
 router.route('/admin').get(isAdmin, listIssues);
 router.route('/user').get(listUserIssues);
 router.route('/status/:id').get(getIssuesStatus);
+router.route('/media/:id').get(getIssueMedia);
 router.route('/course/:id').get(listIssuesByCourse);
 router.route('/:id').get(getIssue).delete(deleteIssue).put(updateIssue);
 

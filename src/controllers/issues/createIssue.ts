@@ -31,12 +31,33 @@ export const createIssue = async (
       assigned_to: course.tutor_id,
     });
 
-    // create issue_media
-    const [issue_media_id] = await trx('issue_media').insert({
-      ...issue_media,
-      issue_id: issueId,
-    });
+    if (req.body.issue_media && !req.file) {
+      // create issue_media
+      await trx('issue_media').insert({
+        ...issue_media,
+        issue_id: issueId,
+      });
+    }
 
+    if (req.file && req.body.issue_media) {
+      const { originalname, mimetype, path } = req.file;
+      const { page, line, timestamp, url, label } = req.body.issue_media;
+      const mediaData = {
+        file_path: path,
+        issue_id: issueId,
+        label: label,
+        mimetype,
+        page,
+        line,
+        timestamp,
+        url,
+        media_label: originalname,
+      };
+      await trx('issue_media').insert({
+        ...mediaData,
+        issue_id: issueId,
+      });
+    }
     // find first status
     const status = await trx('status').first();
 
@@ -74,11 +95,6 @@ export const createIssue = async (
       .where('id', issueId)
       .first();
 
-    // get issue_media
-    const issueMedia: IIssueMediaBase = await db('issue_media')
-      .where('id', issue_media_id)
-      .first();
-
     // find all related status
     const issueStatus = await db('issue_status')
       .select([
@@ -107,7 +123,6 @@ export const createIssue = async (
         last_name: status.last_name,
       },
       created_at: status.created_at,
-      issue_media: issueMedia,
     }));
 
     const returnData = {
