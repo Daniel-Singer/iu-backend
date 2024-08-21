@@ -16,16 +16,22 @@ export const downloadMedia = async (
   next: NextFunction
 ) => {
   try {
-    const { file_path, mimetype } = req.body.media;
+    if (!req.body.media) {
+      res.status(404);
+      throw new Error('Die angeforderte Datei konnte nicht gefunden werden');
+    } else {
+      const { file_path, mimetype } = req.body.media;
 
-    const filepath = path.resolve(file_path);
+      const filepath = path.resolve(file_path);
 
-    // read file
-    const data = await fs.readFile(filepath);
+      // read file
+      const data = await fs.readFile(filepath);
 
-    res.setHeader('Content-Type', mimetype);
-    res.setHeader('Content-Disposition', 'inline');
-    res.send(data);
+      res.setHeader('Content-Type', mimetype);
+      res.setHeader('Content-Disposition', 'inline');
+      res.status(200);
+      res.send(data);
+    }
   } catch (error) {
     next(error);
   }
