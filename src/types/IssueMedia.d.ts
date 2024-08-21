@@ -7,4 +7,5 @@ interface IIssueMediaBase {
   label: string | undefined;
   timestamp: number | undefined;
   url: string | undefined;
+  media_label: string | undefined;
 }
