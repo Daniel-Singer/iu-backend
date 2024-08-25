@@ -17,7 +17,8 @@ export const getIssueMedia = async (
   try {
     const issue_media = await db('issue_media')
       .select(['id', 'label', 'media_label', 'mimetype'])
-      .where('issue_id', req.params.id);
+      .where('issue_id', req.params.id)
+      .first();
     res.status(200).json(issue_media);
   } catch (error) {
     next(error);
