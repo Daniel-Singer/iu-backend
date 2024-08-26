@@ -33,8 +33,9 @@ export const createIssue = async (
 
     if (req.body.issue_media && !req.file) {
       // create issue_media
+      const { media_type, ...rest } = issue_media;
       await trx('issue_media').insert({
-        ...issue_media,
+        ...rest,
         issue_id: issueId,
       });
     }
