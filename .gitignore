@@ -8,3 +8,4 @@ seeds
 dev.sqlite
 .example.env
 uploads
+.DS_Store
