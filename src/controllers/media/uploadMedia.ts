@@ -21,37 +21,25 @@ export const uploadMedia = async (
       .first();
     if (issue) {
       if (req.file) {
-        // check if issue_media entry already exists
-        const issue_media = await db('issue_media')
-          .where({ issue_id: req.params.id })
+        // check if a file for given issue already exists
+        const issue_file = await db('issue_media_file')
+          .where({ issue_id: issue.id })
           .first();
-        if (!issue_media) {
-          const issue_media = await db('issue_media').insert({
-            file_path: req.file.path,
-            issue_id: req.params.id,
-            media_label: req.file.originalname,
-            mimetype: req.file.mimetype,
-          });
-          res.status(201).json({
-            issue: {
-              id: issue.id,
-              tite: issue.title,
-            },
-            ...issue_media,
-          });
+        if (issue_file) {
+          res.status(409);
+          throw new Error(
+            `Es wurde bereits eine Datei für gegebene Fehlermeldung hinterlegt`
+          );
         } else {
-          await db('issue_media').update({
-            file_path: req.file.path,
-            media_label: req.file.originalname,
-            mimetype: req.file.mimetype,
-          });
-          res.status(200).json({
-            issue: {
-              id: issue.id,
-              tite: issue.title,
-            },
-            ...issue_media,
-          });
+          // const { path, originalname, mimetype } = req.file;
+          // await db('issue_media_file').insert({
+          //   file_path: path,
+          //   issue_id: issue.id!,
+          //   media_label: originalname,
+          //   mimetype,
+          // });
+          console.log(req.file);
+          res.sendStatus(200);
         }
       } else {
         res.status(409);

@@ -36,16 +36,7 @@ export const getIssue = async (
       .first();
 
     const issueMedia = await db('issue_media')
-      .select([
-        'id',
-        'url',
-        'label',
-        'mimetype',
-        'page',
-        'line',
-        'timestamp',
-        'media_label',
-      ])
+      .select(['id', 'url', 'page', 'line', 'timestamp'])
       .where('issue_id', issue.id);
 
     const issueStatus = await db('issue_status')
