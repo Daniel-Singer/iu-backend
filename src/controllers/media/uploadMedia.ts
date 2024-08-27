@@ -31,14 +31,13 @@ export const uploadMedia = async (
             `Es wurde bereits eine Datei für gegebene Fehlermeldung hinterlegt`
           );
         } else {
-          // const { path, originalname, mimetype } = req.file;
-          // await db('issue_media_file').insert({
-          //   file_path: path,
-          //   issue_id: issue.id!,
-          //   media_label: originalname,
-          //   mimetype,
-          // });
-          console.log(req.file);
+          const { path, originalname, mimetype } = req.file;
+          await db('issue_media_file').insert({
+            file_path: path,
+            issue_id: issue.id!,
+            name: originalname,
+            mimetype,
+          });
           res.sendStatus(200);
         }
       } else {
@@ -50,6 +49,7 @@ export const uploadMedia = async (
       throw new Error('Die von Ihnen gesuchte Fehlermeldung existiert nicht');
     }
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
