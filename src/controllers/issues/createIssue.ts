@@ -43,19 +43,23 @@ export const createIssue = async (
       const { originalname, mimetype, path } = req.file;
       const { page, line, timestamp, url, label } = req.body.issue_media;
       const mediaData = {
-        file_path: path,
         issue_id: issueId,
         label: label,
-        mimetype,
         page,
         line,
         timestamp,
         url,
-        media_label: originalname,
       };
       await trx('issue_media').insert({
         ...mediaData,
         issue_id: issueId,
+      });
+
+      await trx('issue_media_file').insert({
+        file_path: path,
+        issue_id: issueId!,
+        name: originalname,
+        mimetype,
       });
     }
     // find first status
