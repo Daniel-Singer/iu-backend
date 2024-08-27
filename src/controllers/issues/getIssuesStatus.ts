@@ -34,6 +34,7 @@ export const getIssuesStatus = async (
       status: {
         id: status.status_id,
         label: status.status_label,
+        reason: status.reason,
       },
       created_from: {
         id: status.user_id,
@@ -44,6 +45,7 @@ export const getIssuesStatus = async (
     }));
     res.status(200).json(formatted);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
