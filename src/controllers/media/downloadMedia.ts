@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import fs from 'fs/promises';
 import path from 'path';
+import { db } from '../../config/db';
 
 /**
  * downloadMedia
@@ -16,11 +17,16 @@ export const downloadMedia = async (
   next: NextFunction
 ) => {
   try {
-    if (!req.body.media) {
+    const issue_file = await db('issue_media_file')
+      .where({
+        id: req.params.id,
+      })
+      .first();
+    if (!issue_file) {
       res.status(404);
       throw new Error('Die angeforderte Datei konnte nicht gefunden werden');
     } else {
-      const { file_path, mimetype } = req.body.media;
+      const { file_path, mimetype } = issue_file;
 
       const filepath = path.resolve(file_path);
 
