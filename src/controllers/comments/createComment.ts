@@ -53,7 +53,10 @@ export const createComment = async (
             : issue.created_from,
         issue_id: issue?.id,
         subject: `Neuer Kommentar zu Meldung #${issue?.id}`,
-        head: `Liebe/r Studierende/r`,
+        head:
+          auth.id === issue?.created_from
+            ? `Liebe/r Tutor/in`
+            : `Liebe/r Studierende/r`,
         body: ` Ihrer Meldung mit der ID 
                 ${issue?.id} zum Thema <strong>${issue?.title}</strong>
                 wurde ein neuer Kommentar hinzugefügt.`,

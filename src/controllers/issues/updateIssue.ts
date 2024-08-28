@@ -27,6 +27,30 @@ export const updateIssue = async (
             .where({ id: req.params.id })
             .first()
             .update({ ...update });
+
+          // send notification to user if user is not the one who changed it
+          if (auth.id !== issue.created_from) {
+            await trx('notification').insert({
+              recipient_id: issue?.created_from,
+              issue_id: issue?.id!,
+              subject: 'Meldung wurde bearbeitet',
+              head: 'Liebe/r Studierende/r',
+              body: `Ihre Meldung zum Thema <strong>"${issue?.title}"</strong> wurde bearbeitet.`,
+              footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+            });
+          }
+
+          // send notification to tutor in case tutor is not the changing user
+          if (auth.id !== issue.assigned_to) {
+            await trx('notification').insert({
+              recipient_id: issue?.created_from,
+              issue_id: issue?.id!,
+              subject: 'Meldung wurde bearbeitet',
+              head: 'Liebe/r Tutor/in',
+              body: `Die Ihnen zugewiesenen Meldung zum Thema <strong>"${issue?.title}"</strong> wurde bearbeitet.`,
+              footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+            });
+          }
         }
         // handle status change
         if (status) {
@@ -36,6 +60,29 @@ export const updateIssue = async (
             created_from: auth.id,
             reason: reason && reason !== '' ? reason : null,
           });
+
+          if (auth.id !== issue.created_from) {
+            await trx('notification').insert({
+              recipient_id: issue?.created_from,
+              issue_id: issue?.id!,
+              subject: `Statusänderung der Meldung ${issue?.title}`,
+              head: 'Liebe/r Studierende/r',
+              body: `Der Status Ihrer Meldung zum Thema <strong>"${issue?.title}"</strong> wurde geändert.`,
+              footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+            });
+          }
+
+          // send notification to tutor in case tutor is not the changing user
+          if (auth.id !== issue.assigned_to) {
+            await trx('notification').insert({
+              recipient_id: issue?.created_from,
+              issue_id: issue?.id!,
+              subject: `Statusänderung der Meldung ${issue?.title}`,
+              head: 'Liebe/r Tutor',
+              body: `Der Status Ihrer zugewiesenen Meldung zum Thema <strong>"${issue?.title}"</strong> wurde geändert.`,
+              footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+            });
+          }
         }
         await trx.commit();
         res.status(201).json(issue);
