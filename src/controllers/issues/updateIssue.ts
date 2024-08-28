@@ -27,6 +27,30 @@ export const updateIssue = async (
             .where({ id: req.params.id })
             .first()
             .update({ ...update });
+
+          // send notification to user if user is not the one who changed it
+          if (auth.id !== issue.created_from) {
+            await trx('notification').insert({
+              recipient_id: issue?.created_from,
+              issue_id: issue?.id!,
+              subject: 'Meldung wurde bearbeitet',
+              head: 'Liebe/r Studierende/r',
+              body: `Ihre Meldung zum Thema <strong>"${issue?.title}"</strong> wurde bearbeitet.`,
+              footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+            });
+          }
+
+          // send notification to tutor in case tutor is not the changing user
+          if (auth.id !== issue.assigned_to) {
+            await trx('notification').insert({
+              recipient_id: issue?.created_from,
+              issue_id: issue?.id!,
+              subject: 'Meldung wurde bearbeitet',
+              head: 'Liebe/r Tutor/in',
+              body: `Die Ihnen zugewiesenen Meldung zum Thema <strong>"${issue?.title}"</strong> wurde bearbeitet.`,
+              footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+            });
+          }
         }
         // handle status change
         if (status) {
