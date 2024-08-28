@@ -9,6 +9,7 @@ const PROD_PATH = path.join('/', 'home', 'iu', 'uploads');
 
 const PATH = process.env.NODE_ENV === 'development' ? DEV_PATH : PROD_PATH;
 
+console.log(PATH);
 const upload = multer({ dest: PATH });
 
 export default upload;
