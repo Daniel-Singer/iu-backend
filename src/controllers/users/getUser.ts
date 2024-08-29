@@ -23,6 +23,8 @@ export const getUser = async (
         'username',
         'matrikel_nr',
         'email',
+        'role',
+        'active',
       ])
       .from('users')
       .where('id', req.params.id)
