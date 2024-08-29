@@ -49,7 +49,8 @@ export const listIssuesByCourse = async (
                     LIMIT 1
                 ) as latest_status_label`),
       ])
-      .where({ course_id: req.params.id });
+      .where({ course_id: req.params.id })
+      .orderBy('issue.created_at', 'desc');
 
     const formatted = issues?.map((issue) => ({
       id: issue.id,
@@ -73,6 +74,7 @@ export const listIssuesByCourse = async (
         id: issue.latest_status_id,
         label: issue.latest_status_label,
       },
+      created_at: issue.created_at,
     }));
 
     res.status(200).json(formatted);
