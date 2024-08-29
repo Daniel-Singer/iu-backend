@@ -10,12 +10,13 @@ import { doesUserAlreadyExist } from '../middleware/users/doesUserAlreadyExist';
 import { canAccessUserData } from '../middleware/users/canAccessUserData';
 import { setActiveStatus } from '../controllers/users/setActiveStatus';
 import { resetPassword } from '../controllers/users/resetPassword';
+import { isAdminOrTutor } from '../middleware/auth/isAdminOrTutor';
 
 const router: Router = exress.Router();
 
 router
   .route('/')
-  .get(isAdmin, listUsers)
+  .get(isAdminOrTutor, listUsers)
   .post(isAdmin, doesUserAlreadyExist, createUser);
 router.route('/active/:id').put(isAdmin, setActiveStatus);
 router.route('/resetpassword/:id').put(isAdmin, resetPassword);
