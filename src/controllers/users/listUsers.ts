@@ -25,6 +25,7 @@ export const listUsers = async (
           'users.matrikel_nr',
           'users.role',
           'users.email',
+          'users.active',
         ])
         .leftJoin('issue', 'issue.created_from', 'users.id')
         .leftJoin('issue as tutor_issue', 'tutor_issue.assigned_to', 'users.id')
@@ -36,7 +37,8 @@ export const listUsers = async (
           'users.last_name',
           'users.matrikel_nr',
           'users.role',
-          'users.email'
+          'users.email',
+          'users.active'
         );
       res.status(200).json(users);
     } else {
@@ -48,6 +50,7 @@ export const listUsers = async (
           'users.matrikel_nr',
           'users.role',
           'users.email',
+          'users.active',
         ])
         .where('role', role)
         .leftJoin('issue', 'issue.created_from', 'users.id')
@@ -60,7 +63,8 @@ export const listUsers = async (
           'users.last_name',
           'users.matrikel_nr',
           'users.role',
-          'users.email'
+          'users.email',
+          'users.active'
         );
       res.status(200).json(users);
     }
