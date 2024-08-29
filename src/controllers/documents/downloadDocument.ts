@@ -33,7 +33,10 @@ export const downloadDocument = async (
       const stat = fs.statSync(filePath);
       res.setHeader('Content-Lenght', stat.size);
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${filename}"`
+      );
       file.pipe(res);
     }
   } catch (error) {
