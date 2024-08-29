@@ -8,6 +8,8 @@ import { isUserOrAdmin } from '../middleware/validation/account/isUserOrAdmin';
 import { updateDataProvided } from '../middleware/validation/account/updateDataProvided';
 import { doesUserAlreadyExist } from '../middleware/users/doesUserAlreadyExist';
 import { canAccessUserData } from '../middleware/users/canAccessUserData';
+import { setActiveStatus } from '../controllers/users/setActiveStatus';
+import { resetPassword } from '../controllers/users/resetPassword';
 
 const router: Router = exress.Router();
 
@@ -15,6 +17,8 @@ router
   .route('/')
   .get(isAdmin, listUsers)
   .post(isAdmin, doesUserAlreadyExist, createUser);
+router.route('/active/:id').put(isAdmin, setActiveStatus);
+router.route('/resetpassword/:id').put(isAdmin, resetPassword);
 router
   .route('/:id')
   .get(canAccessUserData, getUser)
