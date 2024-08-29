@@ -28,7 +28,7 @@ export const protect = async (
         process.env.JWT_SECRET as string
       );
       const user: IUserBase = await db('users')
-        .select('id', 'first_name', 'last_name', 'username', 'role')
+        .select('id', 'first_name', 'last_name', 'username', 'role', 'active')
         .where('id', decoded?.user?.id)
         .first();
 
