@@ -20,7 +20,7 @@ export const setActiveStatus = async (
       await db('users')
         .where({ id: req.params.id })
         .update({ active: user.active === 1 ? 0 : 1 });
-      res.sendStatus(200);
+      res.status(200).json({ active: user.active === 1 ? 0 : 1 });
     } else {
       res.status(404);
       throw new Error(`Der von Ihnen gesuchte User existiert nicht`);
