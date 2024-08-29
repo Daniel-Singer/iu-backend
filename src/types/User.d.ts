@@ -6,6 +6,7 @@ interface IUserBase {
   password: string;
   email: string;
   role?: string;
+  active?: boolean;
 }
 
 interface IUserReceive extends IUserBase {
