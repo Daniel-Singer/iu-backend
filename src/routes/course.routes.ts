@@ -17,7 +17,7 @@ router
 router
   .route('/:id')
   .get(getCourse)
-  .put(isAdmin, updateCourse)
+  .put(isAdminOrTutor, updateCourse)
   .delete(isAdmin, deleteCourse);
 
 export default router;
