@@ -4,7 +4,12 @@ import { db } from '../../config/db';
 /**
  * listIssues
  *
- * @description     Returns all issues currently stored in database
+ * @description     Returns all issues currently stored in database. Depending on
+ *                  authenitcated users role, diffenrt issues get returned. If the user
+ *                  has role admin, all issues are returned. If user is tutor or student,
+ *                  the issues where user is either the creator of the issue or the assigned
+ *                  tutor gets returned
+ *
  * @route           GET /api/v1/issues
  * @access          Student, Tutor, Admin
  */
