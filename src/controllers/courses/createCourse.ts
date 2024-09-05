@@ -22,8 +22,12 @@ export const createCourse = async (
       res.status(409);
       throw new Error(`Ein Kurs mit Code ${code} existiert bereits`);
     } else {
-      const [courseId] = await db('course').insert({ code, title, tutor_id });
-      //   const course = await db('course').where('id', courseId);
+      const tutor = auth.role === 'tutor' ? auth.id : tutor_id;
+      const [courseId] = await db('course').insert({
+        code,
+        title,
+        tutor_id: tutor,
+      });
 
       const course = await db('course')
         .leftJoin('users', 'course.tutor_id', 'users.id')
