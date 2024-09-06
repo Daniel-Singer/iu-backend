@@ -15,7 +15,9 @@ export const isUserRelatedOrAdmin = async (
   try {
     const { auth } = req.body;
 
-    const media = await db('issue_media').where({ id: req.params.id }).first();
+    const media = await db('issue_media_file')
+      .where({ id: req.params.id })
+      .first();
     req.body.media = media;
     if (auth.role === 'admin') {
       next();
