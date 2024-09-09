@@ -7,7 +7,8 @@ dotenv.config();
 const DEV_PATH = './uploads';
 const PROD_PATH = path.join('/', 'home', 'iu', 'uploads');
 
-const PATH = process.env.NODE_ENV === 'development' ? DEV_PATH : PROD_PATH;
+const PATH =
+  process.env.IU_DOCUMENT_PATH === 'development' ? DEV_PATH : PROD_PATH;
 
 const upload = multer({ dest: PATH });
 

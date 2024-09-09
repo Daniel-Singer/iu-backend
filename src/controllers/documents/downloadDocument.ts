@@ -20,7 +20,9 @@ export const downloadDocument = async (
     const { filename } = req.query;
     const { auth } = req.body;
     const PATH =
-      process.env.NODE_ENV === 'development' ? DOCUMENT_DIR_DEV : DOCUMENT_DIR;
+      process.env.IU_DOCUMENT_PATH === 'development'
+        ? DOCUMENT_DIR_DEV
+        : DOCUMENT_DIR;
     const filePath = path.join(PATH, auth?.role, filename as string);
     const exists = fs.existsSync(filePath);
     if (!exists) {
