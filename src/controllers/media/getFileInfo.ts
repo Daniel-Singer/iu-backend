@@ -19,8 +19,7 @@ export const getFileInfo = async (
       .select(['id', 'file_path', 'mimetype', 'name'])
       .where({
         issue_id: req.params.id,
-      })
-      .first();
+      });
     res.status(200).json(file_info);
   } catch (error) {
     next(error);
