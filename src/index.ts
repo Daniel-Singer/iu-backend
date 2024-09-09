@@ -26,6 +26,8 @@ import { isAdmin } from './middleware/auth/isAdmin';
 
 dotenv.config();
 
+console.log(process.env.NODE_ENV);
+
 // app setup
 const app: Express = express();
 
