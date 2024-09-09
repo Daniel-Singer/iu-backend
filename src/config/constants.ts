@@ -15,3 +15,18 @@ export const USER_SELECTS = [
   'users.email',
   'users.active',
 ];
+
+export const NOTIFICATION_HEAD: { [key: string]: string } = {
+  student: 'Liebe/r Studierende/r',
+  tutor: 'Liebe/r Tutor/in',
+  admin: 'Liebe/r Administrator/in',
+};
+
+export const MEDIA_UPLOAD_BODY = (role: string, title: string) => {
+  switch (role) {
+    case 'student':
+      return `Deiner Fehlermeldung zum Thema <strong>${title}</strong> wurde eine neue Datei hinzugefügt `;
+    case 'tutor':
+      return `Ihrer zugewiesenen Fehlermeldung zum Thema <strong>${title}</strong> wurde eine neue Datei hinzugefügt `;
+  }
+};

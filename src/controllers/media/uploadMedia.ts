@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { db } from '../../config/db';
+import { MEDIA_UPLOAD_BODY, NOTIFICATION_HEAD } from '../../config/constants';
 
 /**
  * uploadMedia
@@ -14,7 +15,9 @@ export const uploadMedia = async (
   res: Response,
   next: NextFunction
 ) => {
+  const trx = await db.transaction();
   try {
+    const { auth } = req.body;
     // find issue
     const issue: IIssueReceive = await db('issue')
       .where({ id: req.params.id })
@@ -22,12 +25,38 @@ export const uploadMedia = async (
     if (issue) {
       if (req.file) {
         const { path, originalname, mimetype } = req.file;
-        await db('issue_media_file').insert({
+
+        // create issue media row
+        await trx('issue_media_file').insert({
           file_path: path,
           issue_id: issue.id!,
           name: originalname,
           mimetype,
         });
+
+        if (auth.id === issue.created_from) {
+          await trx('notification').insert({
+            recipient_id: issue.assigned_to!,
+            issue_id: issue.id!,
+            subject: 'Neue Datei hinzugefügt',
+            head: NOTIFICATION_HEAD['tutor'],
+            body: MEDIA_UPLOAD_BODY('tutor', issue.title!),
+            footer: 'Vielen Dank! <br />Ihr Korrekturmanagement-Team',
+          });
+        }
+        if (auth.id === issue.assigned_to) {
+          await trx('notification').insert({
+            recipient_id: issue.created_from!,
+            issue_id: issue.id!,
+            subject: 'Neue Datei hinzugefügt',
+            head: NOTIFICATION_HEAD['student'],
+            body: MEDIA_UPLOAD_BODY('student', issue.title!),
+            footer: 'Vielen Dank! <br />Dein Korrekturmanagement-Team',
+          });
+        }
+
+        await trx.commit();
+
         res.sendStatus(200);
       } else {
         res.status(409);
@@ -38,7 +67,7 @@ export const uploadMedia = async (
       throw new Error('Die von Ihnen gesuchte Fehlermeldung existiert nicht');
     }
   } catch (error) {
-    console.log(error);
+    await trx.rollback();
     next(error);
   }
 };
