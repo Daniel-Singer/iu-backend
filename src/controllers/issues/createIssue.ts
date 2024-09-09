@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { db } from '../../config/db';
+import {
+  ISSUE_CREATE_BODY,
+  NOTIFICATION_FOOTER,
+  NOTIFICATION_HEAD,
+} from '../../config/constants';
 
 /**
  * createIssue
@@ -79,9 +84,9 @@ export const createIssue = async (
       recipient_id: auth.id,
       issue_id: issueId,
       subject: 'Neue Meldung aufgenommen',
-      head: 'Liebe/r Studierende/r',
-      body: ` Ihre Meldung zum Thema <strong>"${issue.title}"</strong> wurde erfolgreich aufgenommen.`,
-      footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+      head: NOTIFICATION_HEAD['student'],
+      body: ISSUE_CREATE_BODY('student', issue?.title),
+      footer: NOTIFICATION_FOOTER['student'],
     });
 
     // create notification for tutor
@@ -89,9 +94,9 @@ export const createIssue = async (
       recipient_id: course?.tutor_id,
       issue_id: issueId,
       subject: 'Neue Meldung zugewiesen',
-      head: 'Liebe/r Tutor/in',
-      body: ` Ihnen wurden eine neue Meldung zugewiesen`,
-      footer: `Vielen Dank! <br />Ihr Korrekturmanagement-Team`,
+      head: NOTIFICATION_HEAD['tutor'],
+      body: ISSUE_CREATE_BODY('tutor', issue?.title!),
+      footer: NOTIFICATION_FOOTER['tutor'],
     });
 
     await trx.commit();

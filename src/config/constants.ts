@@ -22,6 +22,20 @@ export const NOTIFICATION_HEAD: { [key: string]: string } = {
   admin: 'Liebe/r Administrator/in',
 };
 
+export const NOTIFICATION_FOOTER = {
+  student: 'Vielen Dank! <br />Dein Korrekturmanagement-Team',
+  tutor: 'Vielen Dank! <br />Ihr Korrekturmanagement-Team',
+};
+
+export const ISSUE_CREATE_BODY = (role: string, title: string) => {
+  switch (role) {
+    case 'student':
+      return `Deine Meldung zum Thema <strong>${title}</strong> wurde erfolgreich aufgenommen`;
+    case 'tutor':
+      return `Ihnen wurde eine neue Meldung zum Thema <strong>${title}</strong> zugewiesen.`;
+  }
+};
+
 export const MEDIA_UPLOAD_BODY = (role: string, title: string) => {
   switch (role) {
     case 'student':
