@@ -16,7 +16,7 @@ export const getFileInfo = async (
 ) => {
   try {
     const file_info = await db('issue_media_file')
-      .select(['id', 'file_path', 'mimetype', 'name'])
+      .select(['id', 'file_path', 'mimetype', 'name', 'created_at'])
       .where({
         issue_id: req.params.id,
       });
