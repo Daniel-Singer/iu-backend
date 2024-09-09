@@ -22,7 +22,7 @@ const production = knex({
     port: 3306,
     user: process.env.DB_USER_DEV,
     password: process.env.DB_PASSWORD_DEV,
-    database: 'iu_dev',
+    database: 'iu',
     charset: 'utf8mb4',
   },
 });
