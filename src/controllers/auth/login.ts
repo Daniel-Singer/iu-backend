@@ -80,12 +80,12 @@ export const login = async (
           res.status(200).json({ ...rest, accessToken });
         } else {
           res.status(401);
-          throw new Error('Falsches Passwort');
+          throw new Error('Benutzername oder Passwort falsch');
         }
       }
     } else {
-      res.status(404);
-      throw new Error('Es existiert kein Benutzer mit diesem Benutzernamen');
+      res.status(401);
+      throw new Error('Benutzername oder Passwort falsch');
     }
   } catch (error) {
     next(error);
