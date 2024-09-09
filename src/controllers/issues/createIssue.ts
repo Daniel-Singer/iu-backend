@@ -41,10 +41,12 @@ export const createIssue = async (
 
     if (req.file && req.body.issue_media) {
       const { originalname, mimetype, path } = req.file;
-      const { page, line, timestamp, url, label } = req.body.issue_media;
+      const { page, line, timestamp, url, label, media_type } =
+        req.body.issue_media;
       const mediaData = {
         issue_id: issueId,
         label: label,
+        media_type,
         page,
         line,
         timestamp,
