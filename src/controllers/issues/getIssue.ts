@@ -22,6 +22,7 @@ export const getIssue = async (
         'course.code as course_code',
         'course.title as course_title',
         'course.tutor_id as course_tutor_id',
+        'course.active as course_active',
         'tutor.id as tutor_id',
         'tutor.first_name as tutor_first_name',
         'tutor.last_name as tutor_last_name',
@@ -54,6 +55,7 @@ export const getIssue = async (
         id: issue.course_id,
         code: issue.course_code,
         title: issue.course_title,
+        active: issue.course_active,
         tutor: {
           id: issue.course_tutor_id,
           first_name: issue.tutor_first_name,

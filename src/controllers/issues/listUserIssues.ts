@@ -39,6 +39,7 @@ export const listUserIssues = async (
           'course.id as course_id',
           'course.code as course_code',
           'course.title as course_title',
+          'course.active as course_active',
           db.raw(`(
           SELECT status.label
           FROM issue_status
@@ -80,6 +81,7 @@ export const listUserIssues = async (
           'course.id as course_id',
           'course.code as course_code',
           'course.title as course_title',
+          'course.active as course_active',
           db.raw(`(
           SELECT status.label
           FROM issue_status
@@ -108,6 +110,7 @@ export const listUserIssues = async (
         id: issue.course_id,
         code: issue.course_code,
         title: issue.course_title,
+        active: issue.course_active,
       },
       category: {
         id: issue.category_id,
