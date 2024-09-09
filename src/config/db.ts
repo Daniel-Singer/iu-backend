@@ -11,6 +11,7 @@ const development = knex({
     user: process.env.DB_USER_DEV,
     password: process.env.DB_PASSWORD_DEV,
     database: 'iu_dev',
+    charset: 'utf8mb4',
   },
 });
 
@@ -22,6 +23,7 @@ const production = knex({
     user: process.env.DB_USER_DEV,
     password: process.env.DB_PASSWORD_DEV,
     database: 'iu_dev',
+    charset: 'utf8mb4',
   },
 });
 
