@@ -20,7 +20,9 @@ export const listDocuments = async (
     const { auth } = req.body;
 
     const PATH =
-      process.env.NODE_ENV === 'development' ? DOCUMENT_DIR_DEV : DOCUMENT_DIR;
+      process.env.IU_DOCUMENT_PATH === 'development'
+        ? DOCUMENT_DIR_DEV
+        : DOCUMENT_DIR;
 
     const files = await fs.readdir(path.join(PATH, auth?.role));
 
